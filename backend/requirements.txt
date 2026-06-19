@@ -1,0 +1,13 @@
+# THESIS 백엔드 코어 의존성
+# 설치: py -m pip install -r requirements.txt
+
+fastapi>=0.110
+uvicorn[standard]>=0.27
+yfinance>=0.2.40
+pandas>=2.0,<3.0    # pykrx 가 pandas<3.0 요구 — 충돌 방지로 상한 핀
+pykrx>=1.2.8        # 외국인 순매수(옵셔널): KRX 회원계정(KRX_ID/KRX_PW) 필요. 미설정 시 stub 폴백
+pydantic>=2.6
+pydantic-settings>=2.2
+requests>=2.31
+httpx>=0.27          # TestClient(스모크 테스트)용
+stripe>=9.0          # 구독 결제(테스트 모드)

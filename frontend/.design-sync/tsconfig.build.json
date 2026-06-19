@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["../*"],
+      "next/link": ["./stubs/next-link.tsx"],
+      "next/navigation": ["./stubs/next-navigation.ts"],
+      "next/image": ["./stubs/next-image.tsx"],
+      "next/headers": ["./stubs/server-stub.ts"],
+      "server-only": ["./stubs/server-stub.ts"]
+    }
+  }
+}

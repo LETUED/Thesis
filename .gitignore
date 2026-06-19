@@ -1,0 +1,36 @@
+# ── 비밀값 (절대 커밋 금지) ──
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env.local
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/.venv/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+frontend/node_modules/
+frontend/.next/
+
+# 로그/캐시
+*.log
+.DS_Store
+
+# 로컬 도구 바이너리 (Stripe CLI 등)
+.tools/
+
+# 캐시 (재생성 가능 — DART corpCode/SEC tickers 등)
+.cache/
+
+# design-sync 스크래치 (재생성됨). .design-sync/ 의 설정·미리보기·NOTES 는 커밋한다.
+frontend/.ds-sync/
+frontend/ds-bundle/
+frontend/.design-sync/.cache/
+frontend/.design-sync/node_modules/
+frontend/.design-sync/learnings/

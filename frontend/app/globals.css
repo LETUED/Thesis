@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* 라이트 — 시맨틱 토큰. 컴포넌트는 hsl(var(--*))만 참조하고, .dark는 값만 교체. */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    /* 표면 elevation: base < card < popover (라이트는 미세) */
+    --surface-1: 0 0% 100%;
+    --surface-2: 210 40% 98%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --border: 214 32% 91%;
+    --radius: 0.75rem;
+
+    /* 밝은 솔리드(amber 등) 위 텍스트 색 */
+    --on-emphasis: 0 0% 100%;
+
+    /* 레짐 — amber 우선, rose는 강경계. *-muted는 옅은 배경 채움용. */
+    --regime-on: 152 60% 40%; /* emerald */
+    --regime-on-muted: 152 50% 94%;
+    --regime-neutral: 215 16% 47%; /* slate */
+    --regime-off: 32 95% 44%; /* amber */
+    --regime-off-muted: 38 92% 94%;
+    --regime-off-strong: 350 78% 50%; /* rose */
+    --regime-off-strong-muted: 350 80% 96%;
+
+    /* 모션 타이밍(절제) — S2 인터랙션에서 사용 */
+    --dur-micro: 150ms;
+    --dur-base: 250ms;
+  }
+
+  /* 다크(기본) — 순흑/순백 금지, 깊이는 그림자가 아니라 명도로(표면이 위로 갈수록 밝게).
+     라이트 단순 반전 금지 — 채도↓·명도↑ 다크 전용 변형(패닉 레드 벽 회피의 기술적 본질). */
+  .dark {
+    --background: 220 24% 9%; /* ≈#11151C 짙은 청회색 */
+    --foreground: 210 16% 92%; /* 오프화이트 */
+
+    --surface-1: 220 22% 12%; /* 카드 (+3%p) */
+    --surface-2: 220 20% 15%; /* hover/팝오버 (+3%p) */
+
+    --card: 220 22% 12%;
+    --card-foreground: 210 16% 92%;
+
+    --muted: 220 16% 18%;
+    --muted-foreground: 215 14% 64%;
+
+    --border: 220 16% 22%;
+
+    --on-emphasis: 220 24% 9%; /* 밝은 솔리드 위 어두운 텍스트 */
+
+    --regime-on: 152 48% 52%; /* emerald 톤다운 */
+    --regime-on-muted: 152 30% 18%;
+    --regime-neutral: 215 14% 64%; /* slate */
+    --regime-off: 38 80% 56%; /* amber 기조 유지 */
+    --regime-off-muted: 38 45% 16%;
+    --regime-off-strong: 350 62% 60%; /* rose: 강경계만 */
+    --regime-off-strong-muted: 350 40% 18%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  /* 스크롤 진입 리빌 — 라이브러리 없이 CSS scroll-driven animation.
+     기본은 항상 보임(미지원/무동작 시 콘텐츠 손실 방지). 지원 + 모션 허용일 때만 애니메이션. */
+  .reveal-up {
+    opacity: 1;
+  }
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal-up {
+        animation: reveal-up linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 38%;
+      }
+    }
+  }
+}
