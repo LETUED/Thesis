@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Panel } from "@/components/ui/panel";
 import { MetricCard, ForeignFlowMetric } from "@/components/ui/metric-card";
+import { AlertRuleControl } from "@/components/personalization/AlertRuleControl";
 import type { MarketSnapshot, TickerMetric, Tier } from "@/lib/types";
 
 // 한국 1순위 매크로 미니보드. 프레젠테이션 전용 서버 컴포넌트('use client' 없음).
@@ -67,7 +68,18 @@ export function KoreaMacroBoard({
                 );
               }
               return (
-                <MetricCard key={symbol} metric={metric} tier={tier} />
+                <MetricCard
+                  key={symbol}
+                  metric={metric}
+                  tier={tier}
+                  slot={
+                    <AlertRuleControl
+                      symbol={metric.symbol}
+                      displayName={metric.display_name}
+                      tier={tier}
+                    />
+                  }
+                />
               );
             })}
             <ForeignFlowMetric flow={snapshot.foreign_flow} />

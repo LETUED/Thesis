@@ -16,6 +16,7 @@ import { Chip } from "@/components/ui/chip";
 import { BulletRow } from "@/components/ui/viz/bullet-row";
 import { m } from "motion/react";
 import { ApiError, postAllocation } from "@/lib/api";
+import { track } from "@/lib/analytics";
 import { createClient } from "@/lib/supabase/client";
 import { EMOTION_LABELS } from "@/lib/emotion";
 import { buildConstraintBullets } from "@/lib/allocation";
@@ -83,6 +84,12 @@ export function AllocationPanel({
           session?.access_token,
         );
         setResult(res);
+        // 활성화 선행지표: 배분 실행 성공 시 1회 계측(실패 경로엔 호출 금지).
+        track("allocation_run", {
+          risk_tolerance: risk.value,
+          horizon,
+          reflect_current_regime: true,
+        });
       } catch (e) {
         setError(
           e instanceof ApiError

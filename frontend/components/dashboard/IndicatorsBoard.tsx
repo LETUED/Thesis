@@ -1,5 +1,6 @@
 import { Panel } from "@/components/ui/panel";
 import { MetricCard, ForeignFlowMetric } from "@/components/ui/metric-card";
+import { AlertRuleControl } from "@/components/personalization/AlertRuleControl";
 import type { Layer, MarketSnapshot, TickerMetric, Tier } from "@/lib/types";
 
 // 지표 상세 전폭 보드. 프레젠테이션 전용 서버 컴포넌트('use client' 없음).
@@ -57,7 +58,18 @@ function LayerSection({
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {metrics.map((m) => (
-          <MetricCard key={m.symbol} metric={m} tier={tier} />
+          <MetricCard
+            key={m.symbol}
+            metric={m}
+            tier={tier}
+            slot={
+              <AlertRuleControl
+                symbol={m.symbol}
+                displayName={m.display_name}
+                tier={tier}
+              />
+            }
+          />
         ))}
       </div>
     </section>

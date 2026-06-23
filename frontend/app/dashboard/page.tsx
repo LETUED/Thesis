@@ -16,6 +16,7 @@ import { AllocationDonut } from "@/components/AllocationDonut";
 import { UpgradeButton } from "@/components/billing/UpgradeButton";
 import { GlanceHub } from "@/components/glance/GlanceHub";
 import { WelcomeLetter } from "@/components/onboarding/WelcomeLetter";
+import { DigestList } from "@/components/personalization/DigestList";
 import { NoticeBanner } from "@/components/ui/notice-banner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,6 +105,13 @@ export default async function DashboardPage() {
 
         {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
         <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />
+
+        {/* 저빈도 다이제스트 — 관심 지표 임계 돌파를 차분히 모아 보여줌 */}
+        <DigestList
+          briefHeadline={regime?.conclusion.headline}
+          metrics={snapshot?.metrics ?? []}
+          tier={tier}
+        />
 
         {/* ① 매크로 · 시장 국면 — 결론(국면) 상세 */}
         <section id="section-regime" className="scroll-mt-6">
