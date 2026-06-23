@@ -60,9 +60,8 @@ export function AppShell({
           </div>
         </header>
         <MobileNav isAuthed={isAuthed} />
-        <main className={fullBleed ? "flex-1" : SHELL_MAIN}>
-          {children}
-        </main>
+        {/* 콘텐츠 영역 — main 랜드마크는 RootLayout 이 단일로 제공하므로 여기선 div. */}
+        <div className={fullBleed ? "flex-1" : SHELL_MAIN}>{children}</div>
       </div>
     </div>
   );

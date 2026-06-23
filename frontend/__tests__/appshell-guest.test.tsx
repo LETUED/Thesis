@@ -42,4 +42,13 @@ describe("AppShell — 게스트/인증 헤더 분기", () => {
     expect(screen.getByText("Pro 업그레이드")).toBeInTheDocument();
     expect(screen.queryByText("무료로 시작")).toBeNull();
   });
+
+  it("중복 main 방지 — AppShell 은 main 랜드마크를 렌더하지 않는다(RootLayout 단일 제공)", () => {
+    render(
+      <AppShell tier="free">
+        <div>content</div>
+      </AppShell>,
+    );
+    expect(screen.queryByRole("main")).toBeNull();
+  });
 });
