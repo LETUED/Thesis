@@ -11,10 +11,14 @@ import { Button } from "@/components/ui/button";
 import { AllocationDonut } from "@/components/AllocationDonut";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { EvidenceLocked } from "@/components/EvidenceLocked";
+import { ConclusionCard } from "@/components/conclusion/ConclusionCard";
+import { Chip } from "@/components/ui/chip";
+import { BulletRow } from "@/components/ui/viz/bullet-row";
 import { m } from "motion/react";
 import { ApiError, postAllocation } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import { EMOTION_LABELS } from "@/lib/emotion";
+import { buildConstraintBullets } from "@/lib/allocation";
 import {
   isLocked,
   type AllocationResult,
@@ -162,57 +166,75 @@ export function AllocationPanel({ tier }: { tier: Tier }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="space-y-4 border-t border-border pt-5"
+            className="border-t border-border pt-5"
           >
-            <p className="text-base font-medium leading-snug">
-              {result.conclusion.headline}
-            </p>
-            <AllocationDonut
-              mix={result.conclusion.mix}
-              centerText={result.conclusion.risk_label_text}
-            />
+            <ConclusionCard
+              eyebrow="자산배분 결론"
+              headline={result.conclusion.headline}
+            >
+              <AllocationDonut
+                mix={result.conclusion.mix}
+                centerText={result.conclusion.risk_label_text}
+              />
 
-            {result.conclusion.sector_tilts_summary.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {result.conclusion.sector_tilts_summary.map((s, i) => (
-                  <span
-                    key={`${s}-${i}`}
-                    className="rounded-md border border-border bg-muted/40 px-2.5 py-1 text-xs text-muted-foreground"
-                  >
-                    {s}
-                  </span>
+              {result.conclusion.sector_tilts_summary.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {result.conclusion.sector_tilts_summary.map((s, i) => (
+                    <Chip key={`${s}-${i}`} variant="muted">
+                      {s}
+                    </Chip>
+                  ))}
+                </div>
+              ) : null}
+
+              {/* 제약 대비 시각화: 현금 최소 20%·단일종목 최대 15% 를 mix 값으로 점검 */}
+              <div className="space-y-3 rounded-md border border-border bg-muted/30 p-4">
+                <p className="text-sm font-medium">분산 제약 점검</p>
+                {buildConstraintBullets(result.conclusion.mix).map((b) => (
+                  <div key={b.key} className="space-y-1">
+                    <BulletRow
+                      label={b.label}
+                      value={b.value}
+                      threshold={b.threshold}
+                      tier={result.tier}
+                      status={b.status}
+                    />
+                    <p className="text-[11px] leading-relaxed text-muted-foreground">
+                      {b.caption}
+                    </p>
+                  </div>
                 ))}
               </div>
-            ) : null}
 
-            {result.evidence === null ? null : isLocked(result.evidence) ? (
-              <EvidenceLocked data={result.evidence} />
-            ) : (
-              <div className="space-y-3 rounded-md border border-border bg-muted/30 p-4 text-xs">
-                {result.evidence.regime_reasons.length > 0 ? (
-                  <div>
-                    <p className="mb-1 font-medium">국면 근거</p>
-                    <ul className="space-y-1 text-muted-foreground">
-                      {result.evidence.regime_reasons.map((r, i) => (
-                        <li key={i}>· {r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-                {result.evidence.korea_signals.length > 0 ? (
-                  <div>
-                    <p className="mb-1 font-medium">한국 시장 신호</p>
-                    <ul className="space-y-1 text-muted-foreground">
-                      {result.evidence.korea_signals.map((r, i) => (
-                        <li key={i}>· {r}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </div>
-            )}
+              {result.evidence === null ? null : isLocked(result.evidence) ? (
+                <EvidenceLocked data={result.evidence} />
+              ) : (
+                <div className="space-y-3 rounded-md border border-border bg-muted/30 p-4 text-xs">
+                  {result.evidence.regime_reasons.length > 0 ? (
+                    <div>
+                      <p className="mb-1 font-medium">국면 근거</p>
+                      <ul className="space-y-1 text-muted-foreground">
+                        {result.evidence.regime_reasons.map((r, i) => (
+                          <li key={i}>· {r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                  {result.evidence.korea_signals.length > 0 ? (
+                    <div>
+                      <p className="mb-1 font-medium">한국 시장 신호</p>
+                      <ul className="space-y-1 text-muted-foreground">
+                        {result.evidence.korea_signals.map((r, i) => (
+                          <li key={i}>· {r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              )}
 
-            <DisclaimerBanner text={result.disclaimer} />
+              <DisclaimerBanner text={result.disclaimer} />
+            </ConclusionCard>
           </m.div>
         ) : null}
       </CardContent>

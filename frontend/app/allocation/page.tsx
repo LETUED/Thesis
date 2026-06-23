@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
 import { AllocationPanel } from "@/components/AllocationPanel";
+import { PageConclusion } from "@/components/glance/PageConclusion";
+import { NextStep } from "@/components/glance/NextStep";
 import type { Tier } from "@/lib/types";
 
 export default async function AllocationPage() {
@@ -28,17 +30,29 @@ export default async function AllocationPage() {
   return (
     <AppShell tier={tier}>
       <div className="space-y-6">
+        <PageConclusion
+          title="③ 자산배분 · 비중"
+          headline="투자 기간과 성향을 고르면, 현재 국면을 반영한 비율의 근거를 살펴봅니다."
+        />
+
         <header>
-          <h1 className="text-2xl font-semibold tracking-tight">자산배분</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            투자 기간과 성향을 고르면, 현재 국면을 반영한 주식·현금·안전자산
-            비율의 근거를 살펴봅니다.
+          <p className="text-sm text-muted-foreground">
+            현금은 최소 20%, 단일 종목은 최대 15%로 제한해 한쪽에 치우치지 않게
+            잡습니다.
           </p>
         </header>
 
         <div className="mx-auto w-full max-w-2xl">
           <AllocationPanel tier={tier} />
         </div>
+
+        <NextStep
+          prevHref="/indicators"
+          prevLabel="지표 상세"
+          nextHref="/dashboard"
+          nextLabel="대시보드로 돌아가기"
+          reason="비율의 근거를 확인했다면, 대시보드에서 전체 흐름을 한눈에 다시 점검합니다."
+        />
       </div>
     </AppShell>
   );
