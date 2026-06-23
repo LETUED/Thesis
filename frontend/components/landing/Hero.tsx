@@ -3,6 +3,7 @@ import { ArrowRight, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RegimeSignalCard } from "@/components/RegimeSignalCard";
 import { ErrorState } from "@/components/ErrorState";
+import { EvidenceTeaser } from "@/components/landing/EvidenceTeaser";
 import type { RegimeResult } from "@/lib/types";
 
 // 히어로 — 좌: 결과중심 헤드라인+단일 CTA+신뢰 마이크로카피, 우: 실제 국면 결론 카드(제품 X-ray).
@@ -66,6 +67,11 @@ export function Hero({
         ) : (
           <ErrorState message="지금은 미리보기를 불러올 수 없습니다. 가입 후 대시보드에서 확인하실 수 있습니다." />
         )}
+
+        {/* 즉시 시연 — 결론(선명)/근거(흐림)로 '결론 무료, 근거 Pro' 를 한 눈에. 정적 데모. */}
+        <div className="mt-5">
+          <EvidenceTeaser />
+        </div>
       </div>
     </section>
   );

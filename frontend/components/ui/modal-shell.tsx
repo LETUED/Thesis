@@ -15,6 +15,8 @@ export interface ModalShellProps {
   /** "center" 모달(기본) 또는 우측 슬라이드 "drawer". */
   side?: "center" | "drawer";
   className?: string;
+  /** backdrop(바깥 레이어) className 보정 — z-index·블러 등 기존 소비처 동작 보존용. 미지정 시 기본값 유지. */
+  backdropClassName?: string;
 }
 
 // 모달/드로어 공통 셸. CompanySearch·MarketDrawer 오버레이 패턴을 일반화:
@@ -27,6 +29,7 @@ export function ModalShell({
   labelledBy,
   side = "center",
   className,
+  backdropClassName,
 }: ModalShellProps) {
   const panelRef = React.useRef<HTMLDivElement>(null);
   const lastActiveRef = React.useRef<HTMLElement | null>(null);
@@ -89,6 +92,7 @@ export function ModalShell({
         isDrawer
           ? "justify-end bg-background/40"
           : "items-start justify-center bg-background/60 p-4 pt-20",
+        backdropClassName,
       )}
       onClick={onClose}
       onKeyDown={handleKeyDown}

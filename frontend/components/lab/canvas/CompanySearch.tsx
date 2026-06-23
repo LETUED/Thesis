@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Search, X } from "lucide-react";
+import { ModalShell } from "@/components/ui/modal-shell";
 import { searchCompanies } from "@/lib/lab/data";
 import { searchCompaniesApi } from "@/lib/api";
 import type { CompanyDirectoryEntry, Tier } from "@/lib/types";
@@ -68,6 +69,7 @@ export function CompanySearch({
   onSelect: (entry: CompanyDirectoryEntry) => void;
   tier?: Tier;
 }) {
+  const headingId = useId();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<CompanyDirectoryEntry[]>([]);
   const [recent, setRecent] = useState<CompanyDirectoryEntry[]>([]);
@@ -131,21 +133,20 @@ export function CompanySearch({
     saveRecent(next);
   }
 
-  if (!open) return null;
-
   const showRecent = !q.trim();
   const list = showRecent ? recent : results;
 
   return (
-    <div
-      className="absolute inset-0 z-40 flex items-start justify-center bg-background/60 p-4 pt-20 backdrop-blur-sm"
-      onClick={onClose}
+    <ModalShell
+      open={open}
+      onClose={onClose}
+      labelledBy={headingId}
+      className="rounded-xl"
     >
-      <div
-        className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-card shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
+      <h2 id={headingId} className="sr-only">
+        기업 검색
+      </h2>
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
           <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
           <input
             autoFocus
@@ -229,7 +230,6 @@ export function CompanySearch({
         <p className="border-t border-border px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
           한국 전 상장사(DART) · 미국 전 상장사(SEC) — 선택하면 실데이터를 불러옵니다.
         </p>
-      </div>
-    </div>
+    </ModalShell>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { X, Download, Store, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ModalShell } from "@/components/ui/modal-shell";
 import type { PageGraph } from "@/lib/lab/persistence";
 import {
   listTemplates,
@@ -22,6 +23,7 @@ export function MarketDrawer({
   getCurrentPage: () => PageGraph;
   onImport: (page: PageGraph) => void;
 }) {
+  const headingId = useId();
   const [tab, setTab] = useState<"browse" | "publish">("browse");
   const [items, setItems] = useState<TemplateRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,11 +79,15 @@ export function MarketDrawer({
   }
 
   return (
-    <div className="absolute inset-0 z-30 flex justify-end">
-      <div className="flex-1 bg-background/40 backdrop-blur-[1px]" onClick={onClose} />
-      <aside className="flex h-full w-full max-w-md flex-col border-l border-border bg-card shadow-xl">
+    <ModalShell
+      open={open}
+      onClose={onClose}
+      side="drawer"
+      labelledBy={headingId}
+      backdropClassName="z-30 backdrop-blur-[1px]"
+    >
         <header className="flex items-center justify-between border-b border-border px-4 py-3">
-          <span className="flex items-center gap-2 font-semibold">
+          <span id={headingId} className="flex items-center gap-2 font-semibold">
             <Store className="h-4 w-4 text-regime-on" aria-hidden />
             템플릿 마켓
           </span>
@@ -223,7 +229,6 @@ export function MarketDrawer({
             </div>
           )}
         </div>
-      </aside>
-    </div>
+    </ModalShell>
   );
 }
