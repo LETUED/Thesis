@@ -60,9 +60,10 @@ export const PageConclusion = React.forwardRef<
       >
         <div className="min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {/* 문서 최상위 heading(h1) — 시각은 작은 eyebrow지만 시맨틱은 페이지 제목. */}
+            <h1 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {title}
-            </p>
+            </h1>
             {label ? (
               <span
                 className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold"

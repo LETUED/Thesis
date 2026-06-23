@@ -131,7 +131,7 @@ export function CompanyLookup({
     <div className="space-y-5">
       {/* 검색바 */}
       <div className="relative">
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 focus-within:ring-2 focus-within:ring-foreground/20">
           <Search
             className="h-4 w-4 shrink-0 text-muted-foreground"
             aria-hidden
@@ -157,7 +157,7 @@ export function CompanyLookup({
               type="button"
               onClick={() => setQ("")}
               aria-label="검색어 지우기"
-              className="shrink-0 text-muted-foreground hover:text-foreground"
+              className="shrink-0 rounded text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
             >
               <X className="h-4 w-4" />
             </button>
@@ -177,7 +177,7 @@ export function CompanyLookup({
                   <button
                     type="button"
                     onClick={() => handleSelect(c)}
-                    className="flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm hover:bg-surface-2"
+                    className="flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm hover:bg-surface-2 focus-visible:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
                   >
                     <span className="min-w-0 truncate font-medium">
                       {c.name}
@@ -211,7 +211,7 @@ export function CompanyLookup({
             <button
               type="button"
               onClick={clearSelection}
-              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-1 rounded text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
             >
               <X className="h-3.5 w-3.5" aria-hidden />
               다른 기업 보기
