@@ -60,8 +60,15 @@ export function AppShell({
           </div>
         </header>
         <MobileNav isAuthed={isAuthed} />
-        {/* 콘텐츠 영역 — main 랜드마크는 RootLayout 이 단일로 제공하므로 여기선 div. */}
-        <div className={fullBleed ? "flex-1" : SHELL_MAIN}>{children}</div>
+        {/* 콘텐츠 영역 = 페이지의 단일 main 랜드마크. 사이드바/헤더는 형제(밖)라
+            skip-link(#main)가 네비를 건너뛰고 본문으로 직행한다. */}
+        <main
+          id="main"
+          tabIndex={-1}
+          className={`${fullBleed ? "flex-1" : SHELL_MAIN} outline-none`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

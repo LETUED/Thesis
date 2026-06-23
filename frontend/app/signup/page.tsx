@@ -36,7 +36,11 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 outline-none"
+      >
         <h1 className="text-2xl font-semibold">메일을 확인해 주세요</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {email} 으로 확인 메일을 보냈습니다. 메일의 링크를 눌러 가입을
@@ -45,12 +49,16 @@ export default function SignupPage() {
         <Link href="/login" className="mt-6 text-sm font-medium underline">
           로그인으로 이동
         </Link>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
+    <main
+      id="main"
+      tabIndex={-1}
+      className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 outline-none"
+    >
       <h1 className="text-2xl font-semibold">회원가입</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         이메일로 THESIS 계정을 만듭니다.
@@ -107,6 +115,6 @@ export default function SignupPage() {
           로그인
         </Link>
       </p>
-    </div>
+    </main>
   );
 }

@@ -43,12 +43,15 @@ describe("AppShell — 게스트/인증 헤더 분기", () => {
     expect(screen.queryByText("무료로 시작")).toBeNull();
   });
 
-  it("중복 main 방지 — AppShell 은 main 랜드마크를 렌더하지 않는다(RootLayout 단일 제공)", () => {
+  it("콘텐츠 영역을 단일 main 랜드마크(id=main, skip-link 타깃)로 렌더한다", () => {
     render(
       <AppShell tier="free">
         <div>content</div>
       </AppShell>,
     );
-    expect(screen.queryByRole("main")).toBeNull();
+    const main = screen.getByRole("main");
+    expect(main).toHaveAttribute("id", "main");
+    // 사이드바/헤더(mock)는 main 밖 — 자식 content 만 main 안에.
+    expect(main).toHaveTextContent("content");
   });
 });

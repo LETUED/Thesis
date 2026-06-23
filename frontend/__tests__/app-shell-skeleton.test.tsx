@@ -21,22 +21,22 @@ describe("AppShellSkeleton — 로딩 셸", () => {
     expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
   });
 
-  it("콘텐츠 영역이 실제 AppShell 과 같은 폭(max-w-7xl)으로 정렬돼 점프를 막는다", () => {
-    const { container } = render(
-      <AppShellSkeleton>
-        <span>x</span>
-      </AppShellSkeleton>,
-    );
-    // 드리프트 회귀 가드 — SHELL_MAIN 단일출처가 깨지면 여기서 잡힌다.
-    expect(container.querySelector('[class*="max-w-7xl"]')).not.toBeNull();
-  });
-
-  it("중복 main 방지 — 스켈레톤은 main 랜드마크를 렌더하지 않는다(RootLayout 단일 제공)", () => {
+  it("콘텐츠 main 이 실제 AppShell 과 같은 폭(max-w-7xl)으로 정렬돼 점프를 막는다", () => {
     render(
       <AppShellSkeleton>
         <span>x</span>
       </AppShellSkeleton>,
     );
-    expect(screen.queryByRole("main")).toBeNull();
+    // 드리프트 회귀 가드 — SHELL_MAIN 단일출처가 깨지면 여기서 잡힌다.
+    expect(screen.getByRole("main").className).toContain("max-w-7xl");
+  });
+
+  it("콘텐츠 영역을 단일 main 랜드마크(id=main)로 렌더한다(AppShell 과 동일 구조)", () => {
+    render(
+      <AppShellSkeleton>
+        <span>x</span>
+      </AppShellSkeleton>,
+    );
+    expect(screen.getByRole("main")).toHaveAttribute("id", "main");
   });
 });

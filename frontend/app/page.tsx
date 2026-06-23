@@ -35,12 +35,14 @@ export default async function LandingPage() {
   return (
     <>
       <LandingNav isAuthed={isAuthed} />
-      <Hero regime={regime} isAuthed={isAuthed} />
-      <TopDownFlow />
-      <ValuePillars />
-      <PricingPreview />
-      <Faq />
-      <FinalCta isAuthed={isAuthed} />
+      <main id="main" tabIndex={-1} className="outline-none">
+        <Hero regime={regime} isAuthed={isAuthed} />
+        <TopDownFlow />
+        <ValuePillars />
+        <PricingPreview />
+        <Faq />
+        <FinalCta isAuthed={isAuthed} />
+      </main>
     </>
   );
 }

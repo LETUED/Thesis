@@ -25,6 +25,7 @@ export default async function PricingPage() {
     <>
       <LandingNav isAuthed={isAuthed} />
 
+      <main id="main" tabIndex={-1} className="outline-none">
       <section className="reveal-up mx-auto max-w-5xl px-4 pb-12 pt-16">
         <div className="mx-auto mb-10 max-w-xl text-center">
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
@@ -46,6 +47,7 @@ export default async function PricingPage() {
       </section>
 
       <FinalCta isAuthed={isAuthed} />
+      </main>
     </>
   );
 }

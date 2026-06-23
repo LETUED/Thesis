@@ -30,13 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MotionProvider>
-            {/* 페이지당 단일 main 랜드마크 — AppShell/AppShellSkeleton 은 더는 main 을 렌더하지 않는다.
-                트레이드오프(후속): AppShell 페이지에선 이 main 이 사이드바/헤더까지 감싸므로
-                skip-link 가 사이드바를 완전히 건너뛰진 못한다. 사이드바를 main 밖으로 빼는
-                완전 배치는 비-AppShell 페이지 main 추가가 필요해 다음 사이클로 분리. */}
-            <main id="main" tabIndex={-1} className="flex-1 outline-none">
-              {children}
-            </main>
+            {/* main 랜드마크는 각 화면이 소유한다 — AppShell(콘텐츠 영역)·비-AppShell 페이지가
+                <main id="main">을 직접 렌더. 여기선 중립 컨테이너만 둬서 사이드바/헤더가
+                main 밖에 놓이고 skip-link 가 본문으로 직행하게 한다. */}
+            <div className="flex-1">{children}</div>
             <footer className="border-t bg-muted/40">
             <div className="mx-auto max-w-5xl px-4 py-4 text-xs leading-relaxed text-muted-foreground">
               {GLOBAL_DISCLAIMER}

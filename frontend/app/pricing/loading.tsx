@@ -4,6 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 // 닮은 스켈레톤을 즉시 보여준다(스피너 대신).
 export default function PricingLoading() {
   return (
+    // 로딩 중에도 단일 main 랜드마크 유지(layout 은 중립 컨테이너 — page.tsx 와 동일 구조).
+    <main id="main" tabIndex={-1} className="outline-none">
     <section className="mx-auto max-w-5xl px-4 pb-12 pt-16">
       {/* 헤더(제목 + 설명) */}
       <div className="mx-auto mb-10 max-w-xl space-y-3 text-center">
@@ -43,5 +45,6 @@ export default function PricingLoading() {
         ))}
       </div>
     </section>
+    </main>
   );
 }

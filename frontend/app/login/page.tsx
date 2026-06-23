@@ -40,7 +40,11 @@ function LoginForm() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
+    <main
+      id="main"
+      tabIndex={-1}
+      className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4 outline-none"
+    >
       <h1 className="text-2xl font-semibold">로그인</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         THESIS 대시보드에 접속합니다.
@@ -96,13 +100,20 @@ function LoginForm() {
           회원가입
         </Link>
       </p>
-    </div>
+    </main>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">불러오는 중...</div>}>
+    <Suspense
+      fallback={
+        // fallback 동안에도 단일 main 유지(LoginForm 도 main 을 렌더 — 동시 노출 안 됨).
+        <main id="main" tabIndex={-1} className="p-8 text-sm text-muted-foreground outline-none">
+          불러오는 중...
+        </main>
+      }
+    >
       <LoginForm />
     </Suspense>
   );

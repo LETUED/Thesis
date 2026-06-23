@@ -35,8 +35,10 @@ export function AppShellSkeleton({ children }: { children: ReactNode }) {
           <Skeleton className="h-7 w-full" />
         </div>
 
-        {/* 콘텐츠 영역 — main 랜드마크는 RootLayout 이 단일로 제공하므로 여기선 div. */}
-        <div className={SHELL_MAIN}>{children}</div>
+        {/* 콘텐츠 영역 = 단일 main 랜드마크(AppShell 과 동일 구조 — 로딩→실제 전환 시 일관). */}
+        <main id="main" tabIndex={-1} className={`${SHELL_MAIN} outline-none`}>
+          {children}
+        </main>
       </div>
     </div>
   );
