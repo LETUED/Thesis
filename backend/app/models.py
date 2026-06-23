@@ -248,6 +248,9 @@ class EvidenceLocked(BaseModel):
     locked: Literal[True] = True
     required_tier: Tier = Tier.PRO
     preview: str = "Pro에서 지표별 상세 근거와 임계값 비교를 확인하실 수 있습니다."
+    # [FREE] 가려진 항목의 '라벨만' 미리보기(수치 0/없음). 어떤 값/수치도 담지 않는다 —
+    # Pro 결핍을 보여주기 위한 라벨 목록뿐이라 마스킹 대상이 아니다. 하위호환: 기본 None.
+    locked_summary: list[str] | None = Field(default=None, json_schema_extra=_free())
 
 
 class RegimeResult(BaseModel):

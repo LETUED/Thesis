@@ -31,6 +31,8 @@ export interface EvidenceLocked {
   locked: true;
   required_tier: Tier;
   preview: string;
+  // 가려진 것의 "형태/개수"만 알려주는 미리보기 텍스트(raw 값 아님). BlurTeaser SR/요약에 노출.
+  locked_summary?: string[] | null;
 }
 
 // 타입가드: evidence union 을 EvidenceLocked 로 좁힐 때만 사용.

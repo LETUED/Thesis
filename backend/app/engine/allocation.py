@@ -361,7 +361,10 @@ def compute_allocation(
             sector_tilts=sector_tilts,
         )
     else:
-        evidence = EvidenceLocked()
+        # Free: 가려진 근거 카테고리를 '라벨만' 노출(수치 금지) — Pro 결핍 가시화.
+        evidence = EvidenceLocked(
+            locked_summary=["국면 반영 근거", "한국 디리스킹 신호", "제약 적용 내역", "섹터 틸트"]
+        )
 
     return AllocationResult(
         conclusion=conclusion,

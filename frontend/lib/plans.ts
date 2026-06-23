@@ -53,6 +53,45 @@ export function getPlan(id: PlanId): Plan {
   return plan;
 }
 
+// 가격 단일출처(비교표·연간 토글용). 월 정가는 PLANS.price 와 동일하게 유지한다.
+// monthlyPrice: 월 결제 시 월 청구액. annualPerMonth: 연간 결제 시 월 환산액(연 1회 청구).
+// null = 결제 불가(Free 무료 / Quant 준비 중).
+export type BillingPeriod = "month" | "year";
+
+export interface PlanPricing {
+  id: PlanId;
+  monthlyPrice: number | null;
+  annualPerMonth: number | null;
+  currency: string;
+  popular: boolean;
+}
+
+export const PLAN_PRICING: readonly PlanPricing[] = [
+  { id: "free", monthlyPrice: 0, annualPerMonth: 0, currency: "₩", popular: false },
+  { id: "pro", monthlyPrice: 9900, annualPerMonth: 8250, currency: "₩", popular: true },
+  { id: "quant", monthlyPrice: 29900, annualPerMonth: 24900, currency: "₩", popular: false },
+] as const;
+
+export function getPricing(id: PlanId): PlanPricing {
+  const pricing = PLAN_PRICING.find((p) => p.id === id);
+  if (!pricing) throw new Error(`Unknown plan pricing id: ${id}`);
+  return pricing;
+}
+
+export function formatPrice(amount: number, currency: string): string {
+  return `${currency}${amount.toLocaleString("ko-KR")}`;
+}
+
+// 연간 결제 시 절약률(%). 유료 플랜 중 최대값을 콜아웃에 쓴다.
+export function annualSavingsPercent(p: PlanPricing): number {
+  if (!p.monthlyPrice || !p.annualPerMonth || p.monthlyPrice <= 0) return 0;
+  return Math.round((1 - p.annualPerMonth / p.monthlyPrice) * 100);
+}
+
+export function maxAnnualSavingsPercent(): number {
+  return Math.max(...PLAN_PRICING.map(annualSavingsPercent));
+}
+
 // 기능 매트릭스(비교표 단일출처). 각 기능이 플랜별로 포함되는지.
 export interface FeatureRow {
   feature: string;

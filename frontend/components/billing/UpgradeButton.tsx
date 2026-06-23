@@ -12,16 +12,19 @@ export function UpgradeButton({
   variant = "default",
   size = "default",
   className,
+  onClick,
 }: {
   label?: string;
   variant?: ButtonProps["variant"];
   size?: ButtonProps["size"];
   className?: string;
+  onClick?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleClick() {
+    onClick?.();
     setLoading(true);
     setError(null);
     try {

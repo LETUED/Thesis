@@ -14,6 +14,11 @@ export interface UpsellCopy {
   body: string;
 }
 
+// 업셀 모달 과신 방지 고지 — 결제 유도가 면책을 가리지 않도록 항상 동반한다.
+// '사세요'·'Pro면 더 잘 산다' 류 금지: 더 많은 정보 접근일 뿐 판단을 대신하지 않는다.
+export const UPSELL_DISCLAIMER =
+  "Pro는 더 많은 근거와 상세 데이터에 대한 접근을 제공할 뿐, 매수·매도 판단을 대신하거나 수익을 보장하지 않습니다. 모든 투자 결정과 책임은 본인에게 있습니다.";
+
 export const UPSELL_COPY: Record<UpsellSource, UpsellCopy> = {
   evidence_regime: {
     title: "이 판단의 근거 지표 보기",

@@ -365,7 +365,15 @@ def classify_regime(
             layer_breakdown=layer_breakdown,
         )
     else:
-        evidence = EvidenceLocked()
+        # Free: 가려진 항목을 '라벨만' 노출(수치 금지) — Pro 결핍 가시화.
+        present_names = [
+            c.display_name for c in contributions if c.raw_value is not None
+        ]
+        locked_summary = [f"{name} 상세 근거" for name in present_names] or [
+            "지표별 상세 근거"
+        ]
+        locked_summary += ["임계값 비교", "레이어별 기여도"]
+        evidence = EvidenceLocked(locked_summary=locked_summary)
 
     return RegimeResult(
         conclusion=conclusion,
