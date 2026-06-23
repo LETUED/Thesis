@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
 import { searchCompanies } from "@/lib/lab/data";
 import { searchCompaniesApi } from "@/lib/api";
-import type { CompanyDirectoryEntry } from "@/lib/types";
+import type { CompanyDirectoryEntry, Tier } from "@/lib/types";
+import { toCompanyRef } from "@/lib/personalization/companyId";
+import { recordRecentlyViewed } from "@/lib/personalization/recentlyViewed";
+import { WatchlistButton } from "@/components/personalization/WatchlistButton";
 
 const RECENT_KEY = "thesis:lab:recentCompanies";
 const RECENT_MAX = 8;
@@ -58,10 +61,12 @@ export function CompanySearch({
   open,
   onClose,
   onSelect,
+  tier = "free",
 }: {
   open: boolean;
   onClose: () => void;
   onSelect: (entry: CompanyDirectoryEntry) => void;
+  tier?: Tier;
 }) {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<CompanyDirectoryEntry[]>([]);
@@ -115,6 +120,8 @@ export function CompanySearch({
     );
     setRecent(next);
     saveRecent(next);
+    // 선택한 기업을 '최근 본 기업'으로 적재(Supabase, fail-open — 흐름 막지 않음).
+    void recordRecentlyViewed(toCompanyRef(entry));
     onSelect(entry);
   }
 
@@ -198,6 +205,12 @@ export function CompanySearch({
                     </span>
                   </span>
                 </button>
+                <WatchlistButton
+                  company={toCompanyRef(c)}
+                  tier={tier}
+                  size="sm"
+                  className="mr-0.5 shrink-0 border-0"
+                />
                 {showRecent ? (
                   <button
                     type="button"

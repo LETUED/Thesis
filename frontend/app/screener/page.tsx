@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, Building2, Construction } from "lucide-react";
+import { ArrowRight, Building2, PieChart } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Tier } from "@/lib/types";
 
 export default async function ScreenerPage() {
@@ -37,37 +38,28 @@ export default async function ScreenerPage() {
           </p>
         </header>
 
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-surface-2">
-              <Building2
-                className="h-6 w-6 text-muted-foreground"
-                aria-hidden
-              />
+        <EmptyState
+          variant="teaching"
+          icon={<Building2 className="h-5 w-5" aria-hidden />}
+          title="국면 → 배분을 먼저 보고 종목을 좁히세요"
+          description="위에서 아래로 — 매크로 국면과 자산배분을 먼저 확인하면 어떤 섹터·종목을 살펴볼지 자연스럽게 좁혀져요. 종목 스크리닝은 그 흐름 위에서 이어집니다."
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Link href="/dashboard">
+                <Button variant="outline" className="gap-2">
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                  국면 보기
+                </Button>
+              </Link>
+              <Link href="/allocation">
+                <Button variant="outline" className="gap-2">
+                  <PieChart className="h-4 w-4" aria-hidden />
+                  자산배분 보기
+                </Button>
+              </Link>
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-medium">준비중</h2>
-                <span className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                  <Construction className="h-3.5 w-3.5" aria-hidden />
-                  작업 중
-                </span>
-              </div>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                국면에 맞는 섹터·종목 스크리닝은 순차 제공 예정입니다. 매크로
-                국면과 자산배분을 먼저 살펴보면서 큰 그림을 잡아두세요.
-              </p>
-              <div className="mt-5">
-                <Link href="/dashboard">
-                  <Button variant="outline" className="gap-2">
-                    대시보드로 가기
-                    <ArrowRight className="h-4 w-4" aria-hidden />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
+          }
+        />
       </div>
     </AppShell>
   );

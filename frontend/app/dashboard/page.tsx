@@ -15,6 +15,7 @@ import { KoreaMacroBoard } from "@/components/dashboard/KoreaMacroBoard";
 import { AllocationDonut } from "@/components/AllocationDonut";
 import { UpgradeButton } from "@/components/billing/UpgradeButton";
 import { GlanceHub } from "@/components/glance/GlanceHub";
+import { WelcomeLetter } from "@/components/onboarding/WelcomeLetter";
 import { NoticeBanner } from "@/components/ui/notice-banner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -98,6 +99,8 @@ export default async function DashboardPage() {
         <SessionWatch />
         {regime?.cache_status === "stale" ? <StaleNotice /> : null}
         <OverconfidenceBanner />
+
+        <WelcomeLetter />
 
         {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
         <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />

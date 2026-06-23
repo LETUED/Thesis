@@ -7,7 +7,8 @@ export type UpsellSource =
   | "indicators_detail"
   | "lab_block"
   | "company_financials"
-  | "alerts";
+  | "alerts"
+  | "watchlist_limit";
 
 export interface UpsellCopy {
   title: string;
@@ -43,5 +44,9 @@ export const UPSELL_COPY: Record<UpsellSource, UpsellCopy> = {
   alerts: {
     title: "임계값 알림 받기",
     body: "관심 지표가 경계 구간에 들어설 때 알림을 받는 기능을 Pro에서 설정할 수 있습니다.",
+  },
+  watchlist_limit: {
+    title: "관심종목 더 담기",
+    body: "Free는 관심종목 1개까지입니다. Pro에서는 관심종목을 제한 없이 담아 한곳에서 추적할 수 있습니다.",
   },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Card,
   CardContent,
@@ -23,8 +23,16 @@ import {
   isLocked,
   type AllocationResult,
   type InvestmentHorizon,
+  type RiskTolerance,
   type Tier,
 } from "@/lib/types";
+
+// 현재 폼 설정(저장 규칙 배선용). 부모 island 가 mirror 해 SaveRuleButton 에 넘긴다.
+export interface AllocationSettings {
+  risk_tolerance: RiskTolerance;
+  horizon: InvestmentHorizon;
+  reflect_current_regime: boolean;
+}
 
 const HORIZONS: { value: InvestmentHorizon; label: string; hint: string }[] = [
   { value: "short", label: "단기", hint: "1년 미만" },
@@ -32,7 +40,14 @@ const HORIZONS: { value: InvestmentHorizon; label: string; hint: string }[] = [
   { value: "long", label: "장기", hint: "3년 이상" },
 ];
 
-export function AllocationPanel({ tier }: { tier: Tier }) {
+export function AllocationPanel({
+  tier,
+  onSettingsChange,
+}: {
+  tier: Tier;
+  // 현재 폼 설정이 바뀔 때 부모에 알림(선택). 저장 규칙 배선용 — 미지정 시 무동작.
+  onSettingsChange?: (settings: AllocationSettings) => void;
+}) {
   const [horizon, setHorizon] = useState<InvestmentHorizon>("mid");
   const [riskIndex, setRiskIndex] = useState(2); // moderate
   const [result, setResult] = useState<AllocationResult | null>(null);
@@ -40,6 +55,14 @@ export function AllocationPanel({ tier }: { tier: Tier }) {
   const [isPending, startTransition] = useTransition();
 
   const risk = EMOTION_LABELS[riskIndex] ?? EMOTION_LABELS[2]!;
+
+  useEffect(() => {
+    onSettingsChange?.({
+      risk_tolerance: risk.value,
+      horizon,
+      reflect_current_regime: true,
+    });
+  }, [risk.value, horizon, onSettingsChange]);
 
   function handleSubmit() {
     setError(null);

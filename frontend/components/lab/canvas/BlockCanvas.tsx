@@ -1459,6 +1459,7 @@ function Inner({ tier }: { tier: Tier }) {
       <CompanySearch
         open={searchNodeId !== null}
         onClose={() => setSearchNodeId(null)}
+        tier={tier}
         onSelect={(entry) => {
           const nodeId = searchNodeId;
           setSearchNodeId(null);

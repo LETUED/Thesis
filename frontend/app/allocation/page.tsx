@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
-import { AllocationPanel } from "@/components/AllocationPanel";
+import { AllocationWithSavedRules } from "@/components/personalization/AllocationWithSavedRules";
 import { PageConclusion } from "@/components/glance/PageConclusion";
 import { NextStep } from "@/components/glance/NextStep";
 import type { Tier } from "@/lib/types";
@@ -43,7 +43,7 @@ export default async function AllocationPage() {
         </header>
 
         <div className="mx-auto w-full max-w-2xl">
-          <AllocationPanel tier={tier} />
+          <AllocationWithSavedRules tier={tier} />
         </div>
 
         <NextStep

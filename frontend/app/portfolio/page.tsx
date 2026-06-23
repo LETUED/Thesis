@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, Construction, Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
-import { Button } from "@/components/ui/button";
+import { MyWatchSection } from "@/components/personalization/MyWatchSection";
 import type { Tier } from "@/lib/types";
 
 export default async function PortfolioPage() {
@@ -31,37 +29,19 @@ export default async function PortfolioPage() {
     <AppShell tier={tier}>
       <div className="space-y-6">
         <header>
-          <h1 className="text-2xl font-semibold tracking-tight">포트폴리오</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">내 관심</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            보유 종목을 한눈에 모아 리스크를 함께 점검하는 공간입니다.
+            관심에 담은 기업과 최근 살펴본 기업을 한곳에 모았어요.
           </p>
         </header>
 
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex flex-col items-center justify-center px-4 py-14 text-center">
-            <div className="relative mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-surface-2 text-muted-foreground">
-              <Wallet className="h-6 w-6" aria-hidden />
-              <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-muted-foreground">
-                <Construction className="h-3.5 w-3.5" aria-hidden />
-              </span>
-            </div>
+        <MyWatchSection tier={tier} />
 
-            <h2 className="text-lg font-medium">준비 중이에요</h2>
-            <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-              보유 종목 추적은 곧 제공됩니다 — 단일 종목 15%·현금 20% 같은 리스크
-              점검을 함께 보여드릴 예정이에요.
-            </p>
-
-            <div className="mt-7">
-              <Link href="/dashboard">
-                <Button variant="outline" className="gap-2">
-                  <ArrowLeft className="h-4 w-4" aria-hidden />
-                  대시보드로 돌아가기
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          참고로, 한 종목에 15%·현금 20% 같은 비중 점검은 자산배분에서 함께
+          살펴볼 수 있어요. 여기 모인 기업은 매수·매도 권유가 아니라 살펴보기
+          위한 메모예요.
+        </p>
       </div>
     </AppShell>
   );
