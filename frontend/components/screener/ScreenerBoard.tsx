@@ -18,12 +18,18 @@ import { Chip } from "@/components/ui/chip";
 import { LockedValue } from "@/components/ui/locked-value";
 import { WatchlistButton } from "@/components/personalization/WatchlistButton";
 import { OverconfidenceBanner } from "@/components/OverconfidenceBanner";
+import { safeInternalPath } from "@/lib/auth/guards";
 
 // 게스트(미로그인) 관심 버튼 — 조용한 실패 대신 로그인으로 부드럽게 유도(저장의 가치를 제시).
+// redirectedFrom 은 GuestActionInvite 와 동일하게 safeInternalPath+인코딩으로 일관 처리.
+const GUEST_WATCH_HREF = `/login?redirectedFrom=${encodeURIComponent(
+  safeInternalPath("/screener"),
+)}`;
+
 function GuestWatchLink({ name }: { name: string }) {
   return (
     <Link
-      href="/login?redirectedFrom=/screener"
+      href={GUEST_WATCH_HREF}
       title={`로그인하면 ${name}을(를) 관심종목에 저장할 수 있어요`}
       className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
     >

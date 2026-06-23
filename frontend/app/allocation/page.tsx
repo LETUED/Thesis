@@ -45,7 +45,7 @@ export default async function AllocationPage() {
         </header>
 
         <div className="mx-auto w-full max-w-2xl">
-          <AllocationWithSavedRules tier={tier} />
+          <AllocationWithSavedRules tier={tier} isAuthed={isAuthed} />
         </div>
 
         <NextStep
