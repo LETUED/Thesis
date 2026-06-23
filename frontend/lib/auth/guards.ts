@@ -5,6 +5,18 @@
 // 여기 없다 — 익명 free 로 결론을 보여주고, 가입은 개인화/Pro 에서만 유도한다.
 export const PROTECTED_PREFIXES = ["/settings", "/portfolio"] as const;
 
+// 게스트 공개(검색엔진 색인 허용) 경로 단일 출처 — sitemap 이 소비한다.
+// robots 의 보호 disallow(PROTECTED_PREFIXES 파생)와 짝을 이루며, 두 경계는 겹치지 않는다.
+export const PUBLIC_ROUTES = [
+  "/",
+  "/dashboard",
+  "/indicators",
+  "/allocation",
+  "/screener",
+  "/lab",
+  "/pricing",
+] as const;
+
 // 경로가 보호 대상인지. 정확히 일치하거나 그 하위 경로(prefix + "/")만 매칭한다.
 // startsWith 단독은 "/settings-export" 같은 유사 경로를 오매칭하므로 경계를 둔다.
 export function isProtectedPath(path: string): boolean {

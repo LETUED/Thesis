@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { isProtectedPath, safeInternalPath } from "@/lib/auth/guards";
+import {
+  PUBLIC_ROUTES,
+  isProtectedPath,
+  safeInternalPath,
+} from "@/lib/auth/guards";
 
 describe("isProtectedPath — 보호 경로는 settings·portfolio(및 하위)만", () => {
   it("보호 경로와 그 하위는 true", () => {
@@ -27,6 +31,12 @@ describe("isProtectedPath — 보호 경로는 settings·portfolio(및 하위)�
   it("prefix 유사 경로를 오매칭하지 않는다", () => {
     expect(isProtectedPath("/settings-export")).toBe(false);
     expect(isProtectedPath("/portfolios")).toBe(false);
+  });
+
+  it("공개 경로(PUBLIC_ROUTES)는 보호 경로와 겹치지 않는다(robots/sitemap 경계 정합)", () => {
+    for (const r of PUBLIC_ROUTES) {
+      expect(isProtectedPath(r)).toBe(false);
+    }
   });
 });
 
