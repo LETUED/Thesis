@@ -125,7 +125,7 @@ export default async function DashboardPage() {
           <SectionLabel n="2" title="한국 1순위 지표" />
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <KoreaMacroBoard snapshot={snapshot} />
+              <KoreaMacroBoard snapshot={snapshot} tier={tier} />
             </div>
             <Card className="flex flex-col">
               <CardHeader>

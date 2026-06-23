@@ -48,7 +48,7 @@ export default async function IndicatorsPage() {
           제공될 예정입니다.
         </p>
 
-        <IndicatorsBoard snapshot={snapshot} />
+        <IndicatorsBoard snapshot={snapshot} tier={tier} />
       </div>
     </AppShell>
   );

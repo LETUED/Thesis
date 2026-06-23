@@ -16,6 +16,8 @@ const config: Config = {
         "surface-1": "hsl(var(--surface-1))",
         "surface-2": "hsl(var(--surface-2))",
         "on-emphasis": "hsl(var(--on-emphasis))",
+        track: "hsl(var(--track))",
+        "track-fill": "hsl(var(--track-fill))",
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
