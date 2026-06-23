@@ -9,6 +9,8 @@ import { Panel } from "@/components/ui/panel";
 // NN/G 스타일 온보딩 레터 — 첫 방문자에게 THESIS가 무엇인지와 Top-Down 3단계
 // (매크로 → 자산배분 → 기업분석)를 따뜻하게 안내한다. localStorage 로 한 번 닫으면
 // 다시 노출하지 않는다. 과신 방지 한 줄을 포함 — 판단을 대신하지 않는다는 톤.
+// 게스트(isAuthed=false)에겐 '무가입으로 둘러보는 중'임을 알리고 가입을 부드럽게 권한다
+// — 강요가 아니라 '저장' 가치를 제시(설계철학: "사세요" 금지, 정보 접근으로 표현).
 
 const DISMISS_KEY = "thesis:welcome:dismissed";
 
@@ -33,11 +35,14 @@ const STEPS = [
 export interface WelcomeLetterProps {
   // 시작하기 CTA 목적지. 기본은 매크로(지표)부터 보도록 /indicators.
   ctaHref?: string;
+  // 인증 여부. false(게스트)면 무가입 안내 + 가입 유도 한 줄을 덧붙인다. 기본 true(기존 동작 보존).
+  isAuthed?: boolean;
   className?: string;
 }
 
 export function WelcomeLetter({
   ctaHref = "/indicators",
+  isAuthed = true,
   className,
 }: WelcomeLetterProps) {
   // 첫 렌더에서는 숨겨 두고(SSR/하이드레이션 깜빡임 방지), 마운트 후 저장값을 확인한다.
@@ -128,6 +133,21 @@ export function WelcomeLetter({
           다음에 볼게요
         </button>
       </div>
+
+      {/* 게스트 전용 — 무가입 상태를 알리고 '저장' 가치로 가입을 부드럽게 권한다(강요·구매 압박 없음). */}
+      {!isAuthed ? (
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          지금은 <span className="text-foreground">가입 없이 둘러보는 중</span>
+          이에요. 가입하면 관심종목과 자산배분 설정이 저장됩니다.{" "}
+          <Link
+            href="/signup"
+            onClick={dismiss}
+            className="font-medium text-foreground underline underline-offset-4 hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
+          >
+            무료로 시작
+          </Link>
+        </p>
+      ) : null}
 
       <p className="text-xs leading-relaxed text-muted-foreground" role="note">
         THESIS는 이런 근거들이 있다는 것을 보여줄 뿐, 매수·매도를 권하거나 수익을

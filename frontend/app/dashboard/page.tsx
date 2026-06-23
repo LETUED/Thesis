@@ -104,7 +104,8 @@ export default async function DashboardPage() {
         {regime?.cache_status === "stale" ? <StaleNotice /> : null}
         <OverconfidenceBanner />
 
-        {isAuthed ? <WelcomeLetter /> : null}
+        {/* 첫 방문 오리엔테이션 — 게스트에게도 노출(가장 안내가 필요한 대상). 게스트면 가입 유도 한 줄 포함. */}
+        <WelcomeLetter isAuthed={isAuthed} />
 
         {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
         <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />
