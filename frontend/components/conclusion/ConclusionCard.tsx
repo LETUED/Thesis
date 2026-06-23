@@ -29,6 +29,8 @@ export interface ConclusionCardProps
   drivers?: string[];
   // evidence 슬롯(EvidenceLocked 또는 상세 근거).
   children?: React.ReactNode;
+  // 신뢰 푸터 슬롯(DataProvenance 등) — "언제·어디서" 데이터인지. disclaimer 위에 차분히.
+  provenance?: React.ReactNode;
   // 응답 disclaimer. 있으면 NoticeBanner 로 노출.
   disclaimer?: string;
 }
@@ -40,6 +42,7 @@ export function ConclusionCard({
   confidence,
   drivers,
   children,
+  provenance,
   disclaimer,
   className,
   ...props
@@ -89,6 +92,8 @@ export function ConclusionCard({
       ) : null}
 
       {children}
+
+      {provenance}
 
       {disclaimer ? (
         <NoticeBanner

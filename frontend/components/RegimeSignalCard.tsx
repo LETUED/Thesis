@@ -1,5 +1,6 @@
 import { ConclusionCard } from "@/components/conclusion/ConclusionCard";
 import { ConfidenceMeter } from "@/components/conclusion/ConfidenceMeter";
+import { DataProvenance } from "@/components/ui/data-provenance";
 import { EvidenceLocked } from "@/components/EvidenceLocked";
 import { REGIME_STYLES } from "@/lib/regime";
 import { isLocked, type RegimeResult } from "@/lib/types";
@@ -21,6 +22,12 @@ export function RegimeSignalCard({ data }: { data: RegimeResult }) {
       headline={conclusion.headline}
       drivers={conclusion.top_drivers}
       disclaimer={data.disclaimer}
+      provenance={
+        <DataProvenance
+          generatedAt={data.generated_at}
+          source="주요 시장 지표 · Yahoo Finance"
+        />
+      }
       confidence={
         <ConfidenceMeter
           level={conclusion.confidence.level}

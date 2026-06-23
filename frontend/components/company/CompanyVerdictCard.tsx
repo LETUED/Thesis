@@ -2,7 +2,9 @@ import * as React from "react";
 import { ConclusionCard } from "@/components/conclusion/ConclusionCard";
 import { ConfidenceMeter } from "@/components/conclusion/ConfidenceMeter";
 import { Chip } from "@/components/ui/chip";
+import { DataProvenance } from "@/components/ui/data-provenance";
 import { LockedValue } from "@/components/ui/locked-value";
+import { sourceLabel } from "@/lib/utils/sourceLabel";
 import { cn } from "@/lib/utils/cn";
 import { BLOCKS, type Company, type MetricResult, type Tone } from "@/lib/lab/data";
 import type { CompanyFundamentals, Tier } from "@/lib/types";
@@ -188,6 +190,7 @@ export function CompanyVerdictCard({
       label={{ text: `${company.name} · ${company.ticker}` }}
       headline={copy.headline}
       disclaimer="여러 재무 지표를 정성적으로 묶어 본 참고용 평결입니다. 매수·매도 신호가 아니며, 한 시점의 데이터에 기반합니다."
+      provenance={<DataProvenance source={sourceLabel(company.source)} />}
       className={cn(className)}
       confidence={
         grades.length > 0 ? (
