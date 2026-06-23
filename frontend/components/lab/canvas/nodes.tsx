@@ -29,6 +29,7 @@ import {
 } from "@/lib/lab/data";
 import { handleId, PORT_COLOR, type PortType } from "@/lib/lab/ports";
 import type { NodeOutput, FilterOp } from "@/lib/lab/evaluate";
+import { BlurTeaser } from "@/components/ui/blur-teaser";
 
 // 캔버스 단위 상태를 노드에 내려주는 컨텍스트.
 // proUnlocked: Pro 잠금 해제 / outputs: 디스플레이 평가결과 / openCompanySearch: 기업 검색 모달 열기.
@@ -116,22 +117,14 @@ function SideHandles({
 // 잠긴 블록 미리보기 — 결핍 사다리(docs/07 §9). 실제 값은 노출하지 않고(누출 차단),
 // 흐릿한 더미로 '여기 분석이 있다'는 호기심 갭만 주고 '펼쳐보기'로 업그레이드 유도.
 // 철학 가드: '사세요'/카운트다운 금지 — 초대 톤. requestUpgrade 가 업그레이드 모달을 연다.
+// 시각은 공유 프리미티브 BlurTeaser 로 통일하되, 펼쳐보기 CTA 는 lab 인앱 모달(requestUpgrade)에 연결.
 function LockedPreview({ label = "Pro" }: { label?: string }) {
   const { requestUpgrade } = useContext(LabUiContext);
   return (
-    <div className="relative">
-      <div aria-hidden className="select-none space-y-1 opacity-50 blur-[3px]">
-        {["●●●●", "●●●", "●●●●"].map((s, i) => (
-          <div key={i} className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{s}</span>
-            <span className="font-semibold tabular-nums">██.█</span>
-          </div>
-        ))}
-      </div>
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-          <Lock className="h-3 w-3" aria-hidden /> {label} 분석
-        </span>
+    <BlurTeaser
+      label={`${label} 분석`}
+      className="border-0 bg-transparent"
+      onUnlock={
         <button
           type="button"
           onClick={requestUpgrade}
@@ -139,8 +132,18 @@ function LockedPreview({ label = "Pro" }: { label?: string }) {
         >
           펼쳐보기
         </button>
+      }
+    >
+      {/* 형태/글리프만 — raw 값 절대 금지(누출 차단) */}
+      <div className="select-none space-y-1">
+        {["●●●●", "●●●", "●●●●"].map((s, i) => (
+          <div key={i} className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">{s}</span>
+            <span className="font-semibold tabular-nums">██.█</span>
+          </div>
+        ))}
       </div>
-    </div>
+    </BlurTeaser>
   );
 }
 

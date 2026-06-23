@@ -61,6 +61,7 @@ import {
   type DisplayKind,
 } from "@/lib/lab/persistence";
 import { UpgradeButton } from "@/components/billing/UpgradeButton";
+import { UpgradeModal } from "@/components/billing/UpgradeModal";
 import { MarketDrawer } from "@/components/lab/market/MarketDrawer";
 import { CompanySearch } from "@/components/lab/canvas/CompanySearch";
 import type { Tier } from "@/lib/types";
@@ -1443,39 +1444,12 @@ function Inner({ tier }: { tier: Tier }) {
         </div>
       ) : null}
 
-      {/* 잠긴 블록 '펼쳐보기' 업그레이드 모달 — 초대 톤(‘사세요’ 금지), disclaimer 유지 */}
-      {showUpgrade ? (
-        <div
-          className="absolute inset-0 z-30 flex items-center justify-center bg-background/60 p-4 backdrop-blur-sm"
-          onClick={() => setShowUpgrade(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-xl border border-border bg-card p-6 text-center shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="mx-auto mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-regime-on/12 text-regime-on">
-              <Lock className="h-5 w-5" aria-hidden />
-            </span>
-            <h3 className="text-lg font-semibold">
-              이 분석은 Pro에서 펼쳐볼 수 있어요
-            </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              PEG·종합 점수·순위·필터 같은 심화 근거를 Pro에서 열어볼 수 있어요.
-              더 깊은 근거를 보는 기능이며, 투자 권유가 아닙니다.
-            </p>
-            <div className="mt-5 flex flex-col items-center gap-2">
-              <UpgradeButton label="Pro 업그레이드" />
-              <button
-                type="button"
-                onClick={() => setShowUpgrade(false)}
-                className="text-xs text-muted-foreground hover:text-foreground"
-              >
-                나중에
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {/* 잠긴 블록 '펼쳐보기' 업그레이드 모달 — 공유 UpgradeModal(초대 톤·disclaimer 내장) */}
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        source="lab_block"
+      />
 
       {/* 데이터 출처 표기(DART ToS 준수) + 과신방지 고지 */}
       <p className="pointer-events-none absolute bottom-1 left-3 z-0 text-[10px] leading-tight text-muted-foreground/70">
