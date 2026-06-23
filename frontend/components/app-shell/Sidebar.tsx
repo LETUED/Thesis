@@ -12,6 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { SHELL_SIDEBAR } from "@/components/app-shell/layout";
 
 // Top-Down 순서 고정 네비. 활성 라우트 강조(usePathname).
 // authOnly: 로그인 전용(보호 경로). 게스트에겐 숨겨 /login 바운스 마찰을 없앤다.
@@ -39,7 +40,7 @@ export function Sidebar({ isAuthed = true }: { isAuthed?: boolean }) {
   const pathname = usePathname();
   const items = visibleNav(isAuthed);
   return (
-    <aside className="hidden w-56 shrink-0 flex-col border-r border-border bg-card/40 md:flex">
+    <aside className={SHELL_SIDEBAR}>
       <div className="px-5 py-5">
         <Link
           href="/dashboard"

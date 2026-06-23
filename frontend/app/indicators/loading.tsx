@@ -1,10 +1,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { AppShellSkeleton } from "@/components/app-shell/AppShellSkeleton";
 
 // 라우트 로딩 UI — 지표 상세 SSR(국면 평결 + 지표 스냅샷 수집)이 몇 초 걸릴 수 있어,
 // 레이아웃(PageConclusion + 레이어별 지표 카드 그리드)을 닮은 스켈레톤을 즉시 보여준다(스피너 대신).
+// AppShellSkeleton 으로 감싸 사이드바·상단바가 미리 자리잡게 해 첫 로드 점프를 없앤다.
 export default function IndicatorsLoading() {
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+    <AppShellSkeleton>
+      <div className="space-y-6">
       {/* PageConclusion (결론 헤더 + 신선도 칩) */}
       <div className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="space-y-2">
@@ -31,6 +34,7 @@ export default function IndicatorsLoading() {
       ))}
 
       <Skeleton className="h-16 w-full" /> {/* NextStep */}
-    </div>
+      </div>
+    </AppShellSkeleton>
   );
 }
