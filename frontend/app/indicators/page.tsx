@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getIndicators, getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
@@ -9,12 +8,15 @@ import { NextStep } from "@/components/glance/NextStep";
 import { REGIME_STYLES } from "@/lib/regime";
 import type { MarketSnapshot, RegimeResult, Tier } from "@/lib/types";
 
+// 게스트 열람 공개 + 사용자별(쿠키 기반) 응답이라 항상 동적 렌더(Full Route Cache 비활성).
+export const dynamic = "force-dynamic";
+
 export default async function IndicatorsPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?redirectedFrom=/indicators");
+  const isAuthed = !!user;
 
   const {
     data: { session },
@@ -36,7 +38,7 @@ export default async function IndicatorsPage() {
   const tier: Tier = regime?.tier ?? "free";
 
   return (
-    <AppShell tier={tier}>
+    <AppShell tier={tier} isAuthed={isAuthed}>
       <div className="space-y-6">
         <PageConclusion
           title="② 지표 상세 · 매크로"

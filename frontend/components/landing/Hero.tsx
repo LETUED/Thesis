@@ -36,16 +36,17 @@ export function Hero({
         </p>
 
         <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link href={isAuthed ? "/dashboard" : "/signup"}>
+          {/* 게스트도 가입 없이 바로 대시보드(익명 free)로 — "결론은 무료" 카피와 행동 일치 */}
+          <Link href="/dashboard">
             <Button size="lg" className="gap-2">
               {isAuthed ? "대시보드로 가기" : "무료로 현재 국면 보기"}
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Button>
           </Link>
           {!isAuthed ? (
-            <Link href="/login">
+            <Link href="/signup">
               <Button variant="outline" size="lg">
-                로그인
+                무료로 시작
               </Button>
             </Link>
           ) : null}
@@ -65,7 +66,7 @@ export function Hero({
         {regime ? (
           <RegimeSignalCard data={regime} />
         ) : (
-          <ErrorState message="지금은 미리보기를 불러올 수 없습니다. 가입 후 대시보드에서 확인하실 수 있습니다." />
+          <ErrorState message="지금은 미리보기를 불러올 수 없습니다. 대시보드에서 바로 확인하실 수 있습니다." />
         )}
 
         {/* 즉시 시연 — 결론(선명)/근거(흐림)로 '결론 무료, 근거 Pro' 를 한 눈에. 정적 데모. */}

@@ -4,12 +4,14 @@ import { Suspense, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { safeInternalPath } from "@/lib/auth/guards";
 
 // useSearchParams 는 Suspense 경계 안에서만 prerender 가능 → 본문을 분리.
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectedFrom = searchParams.get("redirectedFrom") ?? "/dashboard";
+  // 오픈 리다이렉트 방지 — 같은 오리진 내부 경로만 허용(외부 URL 차단).
+  const redirectedFrom = safeInternalPath(searchParams.get("redirectedFrom"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

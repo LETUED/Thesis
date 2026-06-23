@@ -73,6 +73,12 @@ function mapApiCompany(r: CompanyFundamentals, base?: Company): Company {
   };
 }
 
+// 백엔드 행 → Company[] 순수 변환(전역 COMPANIES 변이 없음 — 서버 컴포넌트 안전).
+// 누락 필드는 동일 id 의 mock(base)로 보강하되, base 조회는 읽기 전용이라 요청 간 공유 안전.
+export function companiesFromApi(rows: CompanyFundamentals[]): Company[] {
+  return rows.map((r) => mapApiCompany(r, COMPANIES.find((c) => c.id === r.id)));
+}
+
 // 기본 종목 묶음을 COMPANIES 에 반영. upsert 라 사용자가 검색으로 추가한 종목은 보존된다.
 export function hydrateCompaniesFromApi(rows: CompanyFundamentals[]): void {
   if (!rows.length) return;

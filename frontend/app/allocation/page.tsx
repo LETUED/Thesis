@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
@@ -7,12 +6,15 @@ import { PageConclusion } from "@/components/glance/PageConclusion";
 import { NextStep } from "@/components/glance/NextStep";
 import type { Tier } from "@/lib/types";
 
+// 게스트 열람 공개 + 사용자별(쿠키 기반) 응답이라 항상 동적 렌더.
+export const dynamic = "force-dynamic";
+
 export default async function AllocationPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?redirectedFrom=/allocation");
+  const isAuthed = !!user;
 
   const {
     data: { session },
@@ -28,7 +30,7 @@ export default async function AllocationPage() {
   }
 
   return (
-    <AppShell tier={tier}>
+    <AppShell tier={tier} isAuthed={isAuthed}>
       <div className="space-y-6">
         <PageConclusion
           title="③ 자산배분 · 비중"

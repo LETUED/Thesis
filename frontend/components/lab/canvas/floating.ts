@@ -40,7 +40,6 @@ function intersection(
 function edgeSide(node: InternalNode, point: { x: number; y: number }): Position {
   const p = node.internals.positionAbsolute;
   const w = node.measured?.width ?? 0;
-  const h = node.measured?.height ?? 0;
   const px = Math.round(point.x);
   const py = Math.round(point.y);
   const nx = Math.round(p.x);

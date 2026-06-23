@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowRight, FlaskConical, BarChart3, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ApiError, getRegime, getIndicators, postAllocation } from "@/lib/api";
@@ -41,12 +40,15 @@ function SectionLabel({ n, title }: { n: string; title: string }) {
   );
 }
 
+// 게스트 열람 공개 + 사용자별(쿠키 기반) 응답이라 항상 동적 렌더.
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?redirectedFrom=/dashboard");
+  const isAuthed = !!user;
 
   const {
     data: { session },
@@ -88,7 +90,7 @@ export default async function DashboardPage() {
   const isFree = tier === "free";
 
   return (
-    <AppShell tier={tier}>
+    <AppShell tier={tier} isAuthed={isAuthed}>
       <div className="space-y-10">
         <header>
           <h1 className="text-2xl font-semibold tracking-tight">오늘</h1>
@@ -97,21 +99,24 @@ export default async function DashboardPage() {
           </p>
         </header>
 
-        <SessionWatch />
+        {/* 로그인 사용자 전용(개인화·세션) — 게스트에겐 세션 만료 오탐/빈 다이제스트를 숨긴다 */}
+        {isAuthed ? <SessionWatch /> : null}
         {regime?.cache_status === "stale" ? <StaleNotice /> : null}
         <OverconfidenceBanner />
 
-        <WelcomeLetter />
+        {isAuthed ? <WelcomeLetter /> : null}
 
         {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
         <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />
 
-        {/* 저빈도 다이제스트 — 관심 지표 임계 돌파를 차분히 모아 보여줌 */}
-        <DigestList
-          briefHeadline={regime?.conclusion.headline}
-          metrics={snapshot?.metrics ?? []}
-          tier={tier}
-        />
+        {/* 저빈도 다이제스트 — 관심 지표 임계 돌파를 차분히 모아 보여줌(로그인 전용) */}
+        {isAuthed ? (
+          <DigestList
+            briefHeadline={regime?.conclusion.headline}
+            metrics={snapshot?.metrics ?? []}
+            tier={tier}
+          />
+        ) : null}
 
         {/* ① 매크로 · 시장 국면 — 결론(국면) 상세 */}
         <section id="section-regime" className="scroll-mt-6">

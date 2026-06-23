@@ -14,19 +14,30 @@ import {
 import { cn } from "@/lib/utils/cn";
 
 // Top-Down 순서 고정 네비. 활성 라우트 강조(usePathname).
+// authOnly: 로그인 전용(보호 경로). 게스트에겐 숨겨 /login 바운스 마찰을 없앤다.
 const NAV = [
   { href: "/dashboard", label: "오늘", icon: LayoutDashboard },
   { href: "/indicators", label: "지표 상세", icon: Activity },
   { href: "/allocation", label: "자산배분", icon: PieChart },
   { href: "/lab", label: "조립 분석", icon: FlaskConical, beta: true },
-  { href: "/portfolio", label: "포트폴리오", icon: Wallet, soon: true },
+  { href: "/portfolio", label: "포트폴리오", icon: Wallet, soon: true, authOnly: true },
   { href: "/screener", label: "기업분석", icon: Building2, soon: true },
-  { href: "/settings", label: "설정", icon: Settings },
+  { href: "/settings", label: "설정", icon: Settings, authOnly: true },
 ] as const;
 
+type NavItem = (typeof NAV)[number];
+
+// 게스트에겐 보호(authOnly) 항목을 제외한 공개 결론 네비만 보인다.
+function visibleNav(isAuthed: boolean): readonly NavItem[] {
+  return isAuthed
+    ? NAV
+    : NAV.filter((item) => !("authOnly" in item && item.authOnly));
+}
+
 // 데스크톱 좌측 세로 레일.
-export function Sidebar() {
+export function Sidebar({ isAuthed = true }: { isAuthed?: boolean }) {
   const pathname = usePathname();
+  const items = visibleNav(isAuthed);
   return (
     <aside className="hidden w-56 shrink-0 flex-col border-r border-border bg-card/40 md:flex">
       <div className="px-5 py-5">
@@ -41,7 +52,7 @@ export function Sidebar() {
         </Link>
       </div>
       <nav className="flex-1 space-y-1 px-3 pb-6">
-        {NAV.map((item) => {
+        {items.map((item) => {
           const active = pathname === item.href;
           return (
             <Link
@@ -76,11 +87,12 @@ export function Sidebar() {
 }
 
 // 모바일 상단 가로 스크롤 네비.
-export function MobileNav() {
+export function MobileNav({ isAuthed = true }: { isAuthed?: boolean }) {
   const pathname = usePathname();
+  const items = visibleNav(isAuthed);
   return (
     <nav className="flex gap-1 overflow-x-auto border-b border-border bg-card/40 px-3 py-2 md:hidden">
-      {NAV.map((item) => {
+      {items.map((item) => {
         const active = pathname === item.href;
         return (
           <Link
