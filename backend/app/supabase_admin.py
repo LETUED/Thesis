@@ -64,6 +64,38 @@ async def set_user_tier(
         return False
 
 
+async def insert_usage_event(
+    event_type: str,
+    *,
+    payload: dict[str, Any] | None = None,
+    user_id: str | None = None,
+    tier: str | None = None,
+) -> bool:
+    """usage_events 에 계측 이벤트 1건 적재(insert-only). 성공 여부 반환.
+
+    fail-open: 미설정/네트워크 오류 시 예외를 던지지 않고 False 만 반환한다
+    (호출자는 무시하고 204 로 응답 — 사용자 흐름을 막지 않는다).
+    """
+    if not _configured() or not event_type:
+        return False
+    row: dict[str, Any] = {"event_type": event_type, "payload": payload or {}}
+    if user_id is not None:
+        row["user_id"] = user_id
+    if tier is not None:
+        row["tier"] = tier
+    url = f"{settings.supabase_url.rstrip('/')}/rest/v1/usage_events"
+    try:
+        async with httpx.AsyncClient(timeout=_HTTP_TIMEOUT) as client:
+            resp = await client.post(
+                url,
+                headers={**_admin_headers(), "Prefer": "return=minimal"},
+                json=row,
+            )
+        return resp.status_code in (200, 201, 204)
+    except httpx.HTTPError:
+        return False
+
+
 async def get_user_id_by_stripe_customer(customer_id: str) -> str | None:
     """stripe_customer_id 로 profiles.id 역조회. webhook 의 subscription 이벤트용."""
     if not _configured() or not customer_id:

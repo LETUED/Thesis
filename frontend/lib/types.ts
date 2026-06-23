@@ -156,6 +156,7 @@ export interface TickerMetric {
   change_pct?: number | null;
   trend: TrendInfo;
   status: MetricStatus;
+  threshold_status?: ThresholdHit | null;
   error?: string | null;
   fetched_at: string;
   source: MetricSource;

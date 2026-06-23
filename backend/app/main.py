@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.billing import router as billing_router
+from app.api.events import router as events_router
 from app.api.routes import router
 from app.config import settings
 from app.models import ErrorDetail, ErrorResponse
@@ -71,6 +72,7 @@ def create_app() -> FastAPI:
 
     app.include_router(router)
     app.include_router(billing_router)
+    app.include_router(events_router)
     return app
 
 

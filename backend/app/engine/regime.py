@@ -14,6 +14,7 @@ regime 입력은 dict[str, IndicatorReading] (collector → snapshot_to_readings
 from __future__ import annotations
 
 from app.config import IndicatorRule, RegimeConfig, settings
+from app.engine.thresholds import classify_threshold
 from app.models import (
     Confidence,
     EvidenceLocked,
@@ -60,7 +61,7 @@ def _score_indicator(
             # raw 가 calm 이면 +1, danger 면 -1 이 되도록 보간.
             t = (raw - danger) / span  # danger=0 .. calm=1
             contribution = max(-1.0, min(1.0, t * 2.0 - 1.0))
-        threshold_hit = _classify_threshold(raw, rule)
+        threshold_hit = classify_threshold(raw, rule)
 
     comparison_text = _comparison_text(reading, rule, raw, threshold_hit)
 
@@ -77,30 +78,6 @@ def _score_indicator(
         threshold_hit=threshold_hit,
         comparison_text=comparison_text,
     )
-
-
-def _classify_threshold(raw: float, rule: IndicatorRule):
-    """원시값이 calm/warn/danger 중 어느 구간인지 라벨링(코멘트용)."""
-    calm = rule.calm_threshold
-    warn = rule.warn_threshold
-    danger = rule.danger_threshold
-
-    if rule.direction == "higher_is_risk_off":
-        # 값↑ = 위험. danger >= warn >= calm 순.
-        if danger is not None and raw >= danger:
-            return "danger"
-        if warn is not None and raw >= warn:
-            return "warn"
-        if calm is not None and raw <= calm:
-            return "calm"
-        return "neutral"
-
-    # higher_is_risk_on: 값↑ = 안정. calm >= danger 순.
-    if danger is not None and raw <= danger:
-        return "danger"
-    if calm is not None and raw >= calm:
-        return "calm"
-    return "neutral"
 
 
 def _fmt(v: float | None) -> str:

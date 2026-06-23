@@ -92,6 +92,8 @@ class Disclaimer(BaseModel):
 TrendLabel = Literal["uptrend", "downtrend", "sideways", "insufficient_data"]
 MetricStatus = Literal["ok", "stale", "failed"]
 CacheStatus = Literal["fresh", "cached", "stale"]
+# 임계값 분류 라벨 — collector(TickerMetric) 와 regime(IndicatorContribution) 공용.
+ThresholdHit = Literal["calm", "neutral", "warn", "danger"]
 
 
 class TrendInfo(BaseModel):
@@ -116,6 +118,9 @@ class TickerMetric(BaseModel):
     trend: TrendInfo = Field(default_factory=lambda: TrendInfo(label="insufficient_data"))
 
     status: MetricStatus = Field(default="ok", json_schema_extra=_free())
+    # 임계값(calm/neutral/warn/danger) 분류 — 임계값 규칙이 있는 지표만 채움(없으면 None).
+    # Free 결론 신호용이므로 마스킹하지 않는다(_free). 원시 level(latest 등)은 pro 유지.
+    threshold_status: ThresholdHit | None = Field(default=None, json_schema_extra=_free())
     error: str | None = Field(default=None, json_schema_extra=_pro())
     fetched_at: datetime = Field(default_factory=now_utc)
     source: Literal["yfinance", "stub"] = "yfinance"
@@ -163,8 +168,6 @@ class MarketSnapshot(BaseModel):
 
 
 # ── regime 도메인 ───────────────────────────────────────────────────────────
-
-ThresholdHit = Literal["calm", "neutral", "warn", "danger"]
 
 
 class IndicatorReading(BaseModel):

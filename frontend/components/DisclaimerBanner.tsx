@@ -1,5 +1,6 @@
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { NoticeBanner } from "@/components/ui/notice-banner";
 
 // 응답마다 백엔드가 보내는 disclaimer 문자열을 그대로 노출한다.
 // variant='inline' 은 결과 카드 하단, variant='emphasis' 는 과신방지 강조 배너.
@@ -16,16 +17,16 @@ export function DisclaimerBanner({
 
   if (variant === "emphasis") {
     return (
-      <div
+      <NoticeBanner
+        tone="info"
+        icon={Info}
         className={cn(
-          "flex items-start gap-2 rounded-md border border-border bg-muted/50 px-4 py-3 text-xs leading-relaxed text-muted-foreground",
+          "gap-2 rounded-md bg-muted/50 text-xs [&>svg]:mt-0.5 [&>svg]:h-4 [&>svg]:w-4",
           className,
         )}
-        role="note"
       >
-        <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
         <span>{text}</span>
-      </div>
+      </NoticeBanner>
     );
   }
 

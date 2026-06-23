@@ -35,6 +35,13 @@ const config: Config = {
           muted: "hsl(var(--regime-off-muted))",
           strong: "hsl(var(--regime-off-strong))",
         },
+        // 상태(threshold) 시맨틱 별칭 — 값은 --status-* 가 --regime-* 에 위임
+        status: {
+          calm: "hsl(var(--status-calm))",
+          neutral: "hsl(var(--status-neutral))",
+          warn: "hsl(var(--status-warn))",
+          danger: "hsl(var(--status-danger))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

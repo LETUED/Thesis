@@ -33,6 +33,16 @@
     --regime-off-strong: 350 78% 50%; /* rose */
     --regime-off-strong-muted: 350 80% 96%;
 
+    /* 상태(threshold) — 레짐 색을 시맨틱 별칭으로 재노출. 값은 단일출처(--regime-*)에 위임. */
+    --status-calm: var(--regime-on);
+    --status-neutral: var(--regime-neutral);
+    --status-warn: var(--regime-off);
+    --status-danger: var(--regime-off-strong);
+
+    /* 게이지/진행 트랙 */
+    --track: var(--muted);
+    --track-fill: var(--regime-off);
+
     /* 모션 타이밍(절제) — S2 인터랙션에서 사용 */
     --dur-micro: 150ms;
     --dur-base: 250ms;
@@ -64,6 +74,14 @@
     --regime-off-muted: 38 45% 16%;
     --regime-off-strong: 350 62% 60%; /* rose: 강경계만 */
     --regime-off-strong-muted: 350 40% 18%;
+
+    --status-calm: var(--regime-on);
+    --status-neutral: var(--regime-neutral);
+    --status-warn: var(--regime-off);
+    --status-danger: var(--regime-off-strong);
+
+    --track: var(--muted);
+    --track-fill: var(--regime-off);
   }
 
   * {

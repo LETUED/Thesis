@@ -21,6 +21,7 @@ from typing import Protocol, runtime_checkable
 
 from app.config import settings
 from app.data.foreign_flow import fetch_foreign_flow
+from app.engine.thresholds import classify_threshold
 from app.models import (
     ForeignFlowReading,
     IndicatorReading,
@@ -173,6 +174,14 @@ def collect_one(
     base.change_pct = round(change_pct, 4) if change_pct is not None else None
     base.trend = compute_trend(closes)
     base.status = "ok"
+
+    # 임계값 규칙이 있는 지표(원달러 KRW=X·VIX ^VIX 등)만 status 채움. regime 과 동일
+    # raw 선택(level→latest / momentum→change_pct)으로 단일 분류 로직을 공유한다.
+    rule = settings.regime.indicator_rules.get(spec.symbol)
+    if rule is not None:
+        raw = latest if rule.metric == "level" else base.change_pct
+        if raw is not None:
+            base.threshold_status = classify_threshold(raw, rule)
     return base
 
 

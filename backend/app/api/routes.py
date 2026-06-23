@@ -138,6 +138,9 @@ async def post_allocation(
 
 # TickerMetric 의 _pro 태그 원시수치 필드 — free/익명에는 마스킹(None)한다.
 # (models.py 의 json_schema_extra=_pro 메타와 일치. trend.sma5/sma20 도 _pro.)
+# 주의: threshold_status 는 _free 메타이므로 여기 목록에 넣지 않는다 — Free 결론
+# 신호로 노출 유지(원시 level 인 latest/prev_close 만 마스킹). 이 일관성은
+# test_threshold_status 가 검증한다.
 _PRO_METRIC_FIELDS = ("latest", "prev_close", "error")
 _PRO_TREND_FIELDS = ("sma5", "sma20")
 
