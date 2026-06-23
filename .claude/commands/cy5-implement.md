@@ -5,6 +5,7 @@
 규칙:
 - 설계 범위만 — 요청 안 한 리팩토링·추상화 금지
 - 가드레일: any 금지, 시크릿 하드코딩 금지, SQL/command injection·XSS 주의
+- 라이브러리 호출: Next.js·FastAPI·Supabase·Stripe 등의 정확한 현재 문법이 불확실하면 context7 MCP로 문서를 확인하고 쓴다(존재하지 않는 API 환각 금지)
 - 설계철학: 결론 먼저·근거는 펼쳐보기, 수치 비노출(Free), "지금 사세요" 금지, 과신방지 문구
 - 주석은 WHY가 명확할 때만
 
