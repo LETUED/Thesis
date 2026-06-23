@@ -10,12 +10,12 @@ import { ErrorState } from "@/components/ErrorState";
 import { StaleNotice } from "@/components/StaleNotice";
 import { SessionWatch } from "@/components/SessionWatch";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
-import { FreshnessChip } from "@/components/dashboard/FreshnessChip";
 import { RegimeSpectrum } from "@/components/dashboard/RegimeSpectrum";
 import { KoreaMacroBoard } from "@/components/dashboard/KoreaMacroBoard";
-import { NudgeCard } from "@/components/dashboard/NudgeCard";
 import { AllocationDonut } from "@/components/AllocationDonut";
 import { UpgradeButton } from "@/components/billing/UpgradeButton";
+import { GlanceHub } from "@/components/glance/GlanceHub";
+import { NoticeBanner } from "@/components/ui/notice-banner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type {
@@ -88,40 +88,35 @@ export default async function DashboardPage() {
   return (
     <AppShell tier={tier}>
       <div className="space-y-10">
-        <header className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">대시보드</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              오늘 시장이 어떤 국면인지, 결론부터 확인하세요.
-            </p>
-          </div>
-          {regime ? <FreshnessChip cacheStatus={regime.cache_status} /> : null}
+        <header>
+          <h1 className="text-2xl font-semibold tracking-tight">오늘</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            오늘 시장이 어떤 국면인지, 결론부터 2초 안에 확인하세요.
+          </p>
         </header>
 
         <SessionWatch />
         {regime?.cache_status === "stale" ? <StaleNotice /> : null}
         <OverconfidenceBanner />
 
-        {/* ① 매크로 · 시장 국면 — 결론(국면) 먼저 */}
-        <section>
+        {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
+        <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />
+
+        {/* ① 매크로 · 시장 국면 — 결론(국면) 상세 */}
+        <section id="section-regime" className="scroll-mt-6">
           <SectionLabel n="1" title="매크로 · 시장 국면" />
           <div className="space-y-5">
             {regime ? <RegimeSpectrum data={regime} /> : null}
-            <div className="grid gap-5 lg:grid-cols-3">
-              <div className="lg:col-span-2">
-                {regime ? (
-                  <RegimeSignalCard data={regime} />
-                ) : (
-                  <ErrorState message={regimeError ?? undefined} />
-                )}
-              </div>
-              {regime ? <NudgeCard data={regime} /> : <div />}
-            </div>
+            {regime ? (
+              <RegimeSignalCard data={regime} />
+            ) : (
+              <ErrorState message={regimeError ?? undefined} />
+            )}
           </div>
         </section>
 
         {/* ② 한국 1순위 지표 */}
-        <section>
+        <section id="section-korea" className="scroll-mt-6">
           <SectionLabel n="2" title="한국 1순위 지표" />
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">
@@ -160,7 +155,7 @@ export default async function DashboardPage() {
         </section>
 
         {/* ③ 자산배분 (참고) */}
-        <section>
+        <section id="section-allocation" className="scroll-mt-6">
           <SectionLabel n="3" title="자산배분 (참고)" />
           <div className="grid gap-5 lg:grid-cols-3">
             <Card className="lg:col-span-2">
@@ -301,10 +296,10 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        <p className="border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
+        <NoticeBanner tone="shield" role="note" className="text-xs">
           THESIS의 모든 결론은 여러 지표를 종합한 참고용 정보이며, 특정 종목·자산의
           매수·매도를 권유하지 않습니다. 투자 판단과 책임은 본인에게 있습니다.
-        </p>
+        </NoticeBanner>
       </div>
     </AppShell>
   );

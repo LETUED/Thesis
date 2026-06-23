@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils/cn";
 
 // Top-Down 순서 고정 네비. 활성 라우트 강조(usePathname).
 const NAV = [
-  { href: "/dashboard", label: "대시보드", icon: LayoutDashboard },
+  { href: "/dashboard", label: "오늘", icon: LayoutDashboard },
   { href: "/indicators", label: "지표 상세", icon: Activity },
   { href: "/allocation", label: "자산배분", icon: PieChart },
   { href: "/lab", label: "조립 분석", icon: FlaskConical, beta: true },
