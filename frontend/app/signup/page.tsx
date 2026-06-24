@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { SignupValueProps } from "@/components/auth/SignupValueProps";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -55,6 +56,13 @@ export default function SignupPage() {
       <p className="mt-1 text-sm text-muted-foreground">
         이메일로 THESIS 계정을 만듭니다.
       </p>
+
+      <div className="mt-6 rounded-lg border border-border bg-muted/30 p-4">
+        <p className="mb-3 text-xs font-medium text-muted-foreground">
+          가입하면 펼쳐집니다
+        </p>
+        <SignupValueProps />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
