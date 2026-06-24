@@ -20,7 +20,7 @@
 
 ★ 기록(decision log) — 가치필드는 git에서 자동 도출(자가申告 금지):
 - 경로: `docs/cycles/cycle_3/<NN>-<기능슬러그>.md`. NN = 직전 회차+1(2자리 zero-pad). 세대 폴더 없으면 생성. 슬러그 kebab-case.
-- **git 자동도출 필드**(이번 회차 변경을 `git diff --stat`(커밋 전 워킹트리)으로 실측 — 손으로 고르지 말 것):
+- **git 자동도출 필드**(이번 회차 변경을 실측 — 손으로 고르지 말 것. ★신규 파일이 누락되지 않도록 `git add -N <신규>` 후 `git diff --stat`, 또는 커밋 직전 `git add` 후 `git diff --cached --stat` 으로 측정 — 워킹트리 `git diff` 단독은 untracked 신규파일을 빠뜨린다):
   - **touched**: 변경한 핵심 파일 목록 (git diff 실측)
   - **surface**: touched 파일 경로 → 영역(매핑 규칙). 드리프트 추적의 1차키
   - **net_prod_loc**: 순 프로덕션 LOC(테스트·docs 제외, git stat에서)
