@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getRegime } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
@@ -12,13 +11,16 @@ export default async function AllocationPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?redirectedFrom=/allocation");
+  // 결론 무료: 익명도 자산배분 결론을 본다(로그인 강제 제거). 저장만 가입 후.
+  const isAuthed = user !== null;
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
   const token = session?.access_token;
 
+  // regime 은 tier 도출에만 쓴다. 데이터 신선도는 배분 결론 자체(AllocationPanel 의 result.cache_status)에 붙인다
+  // — 결론 생성과 같은 시점이라 페이지 로드 시점 칩보다 정직하다(04회차에 결론 카드로 일원화).
   let tier: Tier = "free";
   try {
     const regime = await getRegime("free", token);
@@ -28,7 +30,7 @@ export default async function AllocationPage() {
   }
 
   return (
-    <AppShell tier={tier}>
+    <AppShell tier={tier} isAuthed={isAuthed}>
       <div className="space-y-6">
         <PageConclusion
           title="③ 자산배분 · 비중"
@@ -43,12 +45,12 @@ export default async function AllocationPage() {
         </header>
 
         <div className="mx-auto w-full max-w-2xl">
-          <AllocationWithSavedRules tier={tier} />
+          <AllocationWithSavedRules tier={tier} isAuthed={isAuthed} />
         </div>
 
         <NextStep
-          prevHref="/indicators"
-          prevLabel="지표 상세"
+          prevHref={isAuthed ? "/indicators" : undefined}
+          prevLabel={isAuthed ? "지표 상세" : undefined}
           nextHref="/dashboard"
           nextLabel="대시보드로 돌아가기"
           reason="비율의 근거를 확인했다면, 대시보드에서 전체 흐름을 한눈에 다시 점검합니다."

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AllocationDonut } from "@/components/AllocationDonut";
+import { FreshnessChip } from "@/components/dashboard/FreshnessChip";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { EvidenceLocked } from "@/components/EvidenceLocked";
 import { ConclusionCard } from "@/components/conclusion/ConclusionCard";
@@ -123,6 +124,7 @@ export function AllocationPanel({
                   key={h.value}
                   type="button"
                   onClick={() => setHorizon(h.value)}
+                  aria-pressed={active}
                   className={
                     "rounded-md border px-3 py-2 text-center transition-colors " +
                     (active
@@ -202,6 +204,14 @@ export function AllocationPanel({
               eyebrow="자산배분 결론"
               headline={result.conclusion.headline}
             >
+              {/* 이 배분 결론이 기반한 데이터의 신선도(철학5) — 결론과 같은 시점 */}
+              <div className="flex justify-end">
+                <FreshnessChip
+                  cacheStatus={result.cache_status}
+                  generatedAt={result.generated_at}
+                />
+              </div>
+
               <AllocationDonut
                 mix={result.conclusion.mix}
                 centerText={result.conclusion.risk_label_text}

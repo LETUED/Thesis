@@ -85,14 +85,20 @@ export function MyWatchSection({ tier }: { tier: Tier }) {
         variant="teaching"
         icon={<Star className="h-5 w-5" aria-hidden />}
         title="아직 담은 기업이 없어요"
-        description="기업을 검색해 관심에 담아보세요. 조립 분석에서 기업을 살펴보고 별표로 담으면 여기 모여요."
+        description="기업을 검색해 관심에 담아보세요. 종목 검색이나 조립 분석에서 별표로 담으면 여기 모여요."
         action={
-          <Link href="/lab">
-            <Button variant="outline" className="gap-2">
-              <FlaskConical className="h-4 w-4" aria-hidden />
-              조립 분석에서 기업 찾기
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            {/* screener(단순 검색)를 먼저 — /lab(beta 조립)보다 입문자 부담이 적다 */}
+            <Link href="/screener">
+              <Button variant="outline">기업 검색하기</Button>
+            </Link>
+            <Link href="/lab">
+              <Button variant="outline" className="gap-2">
+                <FlaskConical className="h-4 w-4" aria-hidden />
+                조립 분석
+              </Button>
+            </Link>
+          </div>
         }
       />
     );

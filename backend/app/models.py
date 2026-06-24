@@ -42,6 +42,9 @@ def _free(**kw: object) -> dict:
 
 
 def _pro(**kw: object) -> dict:
+    # 주의: _pro 는 OpenAPI 메타일 뿐 자동 직렬화 필터가 아니다 — 실제 Free 마스킹은 런타임 분기가 담당한다.
+    # 새 _pro 원시수치 필드 추가 시 마스킹 두 지점을 모두 점검:
+    #   regime.py classify_regime(conclusion.confidence) + routes._mask_snapshot_for_free(snapshot).
     return {"tier": "pro", **kw}
 
 
@@ -215,7 +218,8 @@ class Confidence(BaseModel):
     """확신도. 표준편차 노출 금지 — 항상 확률적 라벨."""
 
     level: Literal["weak", "moderate", "strong"] = Field(json_schema_extra=_free())
-    score: float = Field(ge=0.0, le=1.0, json_schema_extra=_free())
+    # 원시 종합 점수(0~1)도 입문자엔 비노출(철학4) — Free 는 level/probabilistic_label 로 충분.
+    score: float | None = Field(default=None, ge=0.0, le=1.0, json_schema_extra=_pro())
     probabilistic_label: str = Field(json_schema_extra=_free())  # '비교적 뚜렷한 신호입니다'
     rationale: str | None = Field(default=None, json_schema_extra=_pro())
 
@@ -340,6 +344,7 @@ class AllocationResult(BaseModel):
     confidence: Literal["low", "moderate", "high"] = "moderate"
     disclaimer: str  # 필수
     tier: Tier = Tier.FREE
+    cache_status: CacheStatus = "fresh"  # 배분이 기반한 시장 데이터 신선도(철학5: 'stale'이면 프론트가 갱신 지연 고지).
     generated_at: datetime = Field(default_factory=now_utc)
 
 

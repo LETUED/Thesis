@@ -4,7 +4,7 @@ import { Compass, Lightbulb } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { FreshnessChip } from "@/components/dashboard/FreshnessChip";
 import { KoreaTriadStrip } from "@/components/glance/KoreaTriadStrip";
-import { REGIME_STYLES } from "@/lib/regime";
+import { REGIME_STYLES, REGIME_HINT } from "@/lib/regime";
 import type {
   AllocationResult,
   MarketSnapshot,
@@ -73,24 +73,37 @@ export function GlanceHub({
         <p className="text-sm font-semibold tracking-tight text-foreground">
           오늘 한눈에
         </p>
-        {regime ? <FreshnessChip cacheStatus={regime.cache_status} /> : null}
+        {regime ? (
+          <FreshnessChip
+            cacheStatus={regime.cache_status}
+            generatedAt={regime.generated_at}
+          />
+        ) : null}
       </div>
 
       {/* 1) 국면 결론 한 줄 — label 칩 + headline */}
       <GlanceRow title="시장 국면" href="#section-regime">
         {conclusion && style ? (
           <div className="space-y-1.5">
-            <span
-              className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold"
-              style={{ backgroundColor: style.badgeBg, color: style.badgeText }}
-            >
+            <div className="flex flex-wrap items-center gap-2">
+              {/* 스크린리더엔 라벨+풀이를 한 문장으로(a11y) — 시각 풀이 span 은 aria-hidden 으로 중복 청취 제거 */}
               <span
-                aria-hidden="true"
-                className="h-1.5 w-1.5 shrink-0 rounded-full"
-                style={{ backgroundColor: style.dot }}
-              />
-              {conclusion.label}
-            </span>
+                className="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold"
+                style={{ backgroundColor: style.badgeBg, color: style.badgeText }}
+                aria-label={`${conclusion.label}, ${REGIME_HINT[conclusion.label]}`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: style.dot }}
+                />
+                {conclusion.label}
+              </span>
+              {/* 입문자용 용어 풀이(철학3) — '리스크온'이 무슨 뜻인지 곁에 병기(시각 전용) */}
+              <span className="text-xs text-muted-foreground" aria-hidden="true">
+                {REGIME_HINT[conclusion.label]}
+              </span>
+            </div>
             <p className="text-base font-semibold leading-snug tracking-tight text-foreground">
               {conclusion.headline}
             </p>

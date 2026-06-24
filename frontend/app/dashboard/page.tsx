@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { ArrowRight, FlaskConical, BarChart3, Lock } from "lucide-react";
+import { ArrowRight, FlaskConical, BarChart3, Building2, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ApiError, getRegime, getIndicators, postAllocation } from "@/lib/api";
 import { AppShell } from "@/components/app-shell/AppShell";
@@ -8,6 +7,7 @@ import { RegimeSignalCard } from "@/components/RegimeSignalCard";
 import { OverconfidenceBanner } from "@/components/OverconfidenceBanner";
 import { ErrorState } from "@/components/ErrorState";
 import { StaleNotice } from "@/components/StaleNotice";
+import { PartialDataNotice } from "@/components/PartialDataNotice";
 import { SessionWatch } from "@/components/SessionWatch";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { RegimeSpectrum } from "@/components/dashboard/RegimeSpectrum";
@@ -15,6 +15,7 @@ import { KoreaMacroBoard } from "@/components/dashboard/KoreaMacroBoard";
 import { AllocationDonut } from "@/components/AllocationDonut";
 import { UpgradeButton } from "@/components/billing/UpgradeButton";
 import { GlanceHub } from "@/components/glance/GlanceHub";
+import { NextStep } from "@/components/glance/NextStep";
 import { WelcomeLetter } from "@/components/onboarding/WelcomeLetter";
 import { DigestList } from "@/components/personalization/DigestList";
 import { NoticeBanner } from "@/components/ui/notice-banner";
@@ -46,7 +47,8 @@ export default async function DashboardPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login?redirectedFrom=/dashboard");
+  // 결론 무료: 익명도 free 결론(국면·자산배분)을 본다. 로그인 강제 없음(redirect 제거).
+  const isAuthed = user !== null;
 
   const {
     data: { session },
@@ -88,7 +90,7 @@ export default async function DashboardPage() {
   const isFree = tier === "free";
 
   return (
-    <AppShell tier={tier}>
+    <AppShell tier={tier} isAuthed={isAuthed}>
       <div className="space-y-10">
         <header>
           <h1 className="text-2xl font-semibold tracking-tight">오늘</h1>
@@ -97,11 +99,18 @@ export default async function DashboardPage() {
           </p>
         </header>
 
-        <SessionWatch />
+        {/* 익명은 세션이 없어 항상 만료로 오판되므로 로그인 사용자에게만 노출 */}
+        {isAuthed ? <SessionWatch /> : null}
         {regime?.cache_status === "stale" ? <StaleNotice /> : null}
+        {snapshot?.partial ? (
+          <PartialDataNotice failedCount={snapshot.failed_symbols.length} />
+        ) : null}
         <OverconfidenceBanner />
 
-        <WelcomeLetter />
+        <WelcomeLetter
+          ctaHref={isAuthed ? "/indicators" : "/signup"}
+          ctaLabel={isAuthed ? "시작하기" : "무료로 시작"}
+        />
 
         {/* 2초 글랜스 — 결론만 한눈에, 근거·조정은 아래 detail 섹션으로 */}
         <GlanceHub regime={regime} snapshot={snapshot} allocation={allocation} />
@@ -149,12 +158,20 @@ export default async function DashboardPage() {
                   확인할 수 있어요.
                 </p>
                 <div className="mt-auto pt-4">
-                  {isFree ? (
-                    <UpgradeButton label="Pro로 지표 상세 보기" size="sm" />
-                  ) : (
+                  {/* 익명 → 가입 먼저(결론무료→가입→Pro 순서), 인증 free → Pro 결제, Pro → 상세 */}
+                  {!isFree ? (
                     <Link href="/indicators">
                       <Button variant="outline" size="sm" className="gap-2">
                         지표 상세 보기
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </Link>
+                  ) : isAuthed ? (
+                    <UpgradeButton label="Pro로 지표 상세 보기" size="sm" />
+                  ) : (
+                    <Link href="/signup">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        회원가입하고 더 보기
                         <ArrowRight className="h-4 w-4" aria-hidden />
                       </Button>
                     </Link>
@@ -239,12 +256,19 @@ export default async function DashboardPage() {
                   Pro에서 모두 펼쳐집니다.
                 </p>
                 <div className="mt-auto pt-4">
-                  {isFree ? (
-                    <UpgradeButton label="Pro 업그레이드" size="sm" />
-                  ) : (
+                  {!isFree ? (
                     <Link href="/allocation">
                       <Button variant="outline" size="sm" className="gap-2">
                         상세 근거 보기
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </Link>
+                  ) : isAuthed ? (
+                    <UpgradeButton label="Pro 업그레이드" size="sm" />
+                  ) : (
+                    <Link href="/signup">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        회원가입하고 더 보기
                         <ArrowRight className="h-4 w-4" aria-hidden />
                       </Button>
                     </Link>
@@ -278,12 +302,22 @@ export default async function DashboardPage() {
                   기업을 한눈에 비교해 보세요.
                 </p>
                 <div className="mt-auto pt-4">
-                  <Link href="/lab">
-                    <Button variant="outline" size="sm" className="gap-2">
-                      조립 분석 열기
-                      <ArrowRight className="h-4 w-4" aria-hidden />
-                    </Button>
-                  </Link>
+                  {/* /lab 은 로그인 게이트 — 익명에겐 사이드바 자물쇠와 동선을 통일(막다른 /login 대신 가입) */}
+                  {isAuthed ? (
+                    <Link href="/lab">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        조립 분석 열기
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link href="/signup">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Lock className="h-4 w-4" aria-hidden />
+                        회원가입하고 이용
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -291,21 +325,46 @@ export default async function DashboardPage() {
             <Card className="flex flex-col">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  종목 스크리너
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    준비중
-                  </span>
+                  <Building2
+                    className="h-4 w-4 text-muted-foreground"
+                    aria-hidden
+                  />
+                  기업분석
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col">
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  국면과 자산배분 안에서 어떤 종목을 볼지, 지표로 좁혀 찾는
-                  스크리너를 준비하고 있어요.
+                  기업을 검색해 PER·ROE 등 재무 신호를 바로 확인하세요.
                 </p>
+                <div className="mt-auto pt-4">
+                  {/* 실물은 동작하는 기업분석 조회기 — '준비중' 죽은 카드를 정직하게 연다(/lab 카드와 동선 통일) */}
+                  {isAuthed ? (
+                    <Link href="/screener">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        기업분석 열기
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link href="/signup">
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Lock className="h-4 w-4" aria-hidden />
+                        회원가입하고 이용
+                      </Button>
+                    </Link>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
         </section>
+
+        {/* Top-Down 흐름의 시작점(오늘) → 다음 단계 안내. 입문자가 결론 뒤 자연히 이어가게(철학2) */}
+        <NextStep
+          nextHref="/allocation"
+          nextLabel="자산배분 보기"
+          reason="오늘 국면을 확인했다면, 이 국면을 반영한 주식·현금·안전자산 비율로 이어집니다."
+        />
 
         <NoticeBanner tone="shield" role="note" className="text-xs">
           THESIS의 모든 결론은 여러 지표를 종합한 참고용 정보이며, 특정 종목·자산의

@@ -13,6 +13,7 @@ import type {
 import { toCompanyRef } from "@/lib/personalization/companyId";
 import { recordRecentlyViewed } from "@/lib/personalization/recentlyViewed";
 import { CompanyVerdictCard } from "@/components/company/CompanyVerdictCard";
+import { WatchlistButton } from "@/components/personalization/WatchlistButton";
 
 // 기업분석 검색·선택 island. CompanySearch.tsx(랩 캔버스 전용)는 건드리지 않고
 // 동일 API(searchCompaniesApi·getCompanyById)만 재사용한다.
@@ -208,14 +209,22 @@ export function CompanyLookup({
               </span>{" "}
               의 재무 평결
             </p>
-            <button
-              type="button"
-              onClick={clearSelection}
-              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-3.5 w-3.5" aria-hidden />
-              다른 기업 보기
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              {/* 본 종목을 곧장 관심(포트폴리오)으로 — 막다른 평결을 5단계 동선으로 잇는다 */}
+              <WatchlistButton
+                company={toCompanyRef(selected)}
+                tier={tier}
+                size="sm"
+              />
+              <button
+                type="button"
+                onClick={clearSelection}
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" aria-hidden />
+                다른 기업 보기
+              </button>
+            </div>
           </div>
 
           {loadingDetail ? (

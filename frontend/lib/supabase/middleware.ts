@@ -3,15 +3,20 @@ import { NextResponse, type NextRequest } from "next/server";
 
 type CookieToSet = { name: string; value: string; options?: CookieOptions };
 
+// 결론(국면·자산배분)은 무료 — /dashboard·/allocation 은 익명도 접근(설계철학 6: 결론 무료/근거 유료).
+// 근거 상세(/indicators)·개인화 영역(/lab·/portfolio·/screener·/settings)만 로그인 게이트.
 const PROTECTED_PREFIXES = [
-  "/dashboard",
   "/indicators",
-  "/allocation",
   "/lab",
   "/portfolio",
   "/screener",
   "/settings",
 ];
+
+// 경로가 로그인 보호 대상인지 판정. updateSession(Supabase 의존)과 분리해 회귀 테스트가 가능하도록 export.
+export function isProtectedPath(path: string): boolean {
+  return PROTECTED_PREFIXES.some((p) => path.startsWith(p));
+}
 
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({ request });
@@ -43,9 +48,8 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PREFIXES.some((p) => path.startsWith(p));
 
-  if (isProtected && !user) {
+  if (isProtectedPath(path) && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirectedFrom", path);

@@ -26,6 +26,14 @@ export const REGIME_STYLES: Record<RegimeLabel, RegimeStyle> = {
   },
 };
 
+// 국면 라벨의 입문자용 한 줄 풀이(철학3: 입문자 보호 — '리스크온' 같은 용어를 그대로 두지 않는다).
+// '매도'·행동 강요 톤 금지. RegimeSpectrum 의 양끝 병기(위험 회피/선호)와 톤 일관.
+export const REGIME_HINT: Record<RegimeLabel, string> = {
+  리스크온: "위험을 감수할 만한 흐름",
+  중립: "한쪽으로 치우치지 않는 구간",
+  리스크오프: "위험을 줄이는 게 우선인 흐름",
+};
+
 // 확신도 막대 칸 수(weak=1, moderate=2, strong=3). 숫자 점수 직접 노출 금지.
 export const CONFIDENCE_BARS: Record<ConfidenceLevel, number> = {
   weak: 1,

@@ -133,6 +133,8 @@ async def post_allocation(
         )
     if not result.disclaimer:
         result.disclaimer = settings.disclaimer
+    # 배분이 기반한 snapshot 신선도를 결론과 함께 전달(철학5) — regime 과 동일하게 stale 고지를 가능케 한다.
+    result.cache_status = snapshot.cache_status
     return result
 
 

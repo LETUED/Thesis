@@ -30,7 +30,7 @@ export function AllocationDonut({
       <div
         className="relative h-44 w-44 shrink-0"
         role="img"
-        aria-label={`자산배분: 주식 ${mix.stocks_pct.toFixed(0)}퍼센트, 현금 ${mix.cash_pct.toFixed(0)}퍼센트, 안전자산 ${mix.safe_pct.toFixed(0)}퍼센트`}
+        aria-label={`${centerText}. 자산배분: 주식 ${mix.stocks_pct.toFixed(0)}퍼센트, 현금 ${mix.cash_pct.toFixed(0)}퍼센트, 안전자산 ${mix.safe_pct.toFixed(0)}퍼센트`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

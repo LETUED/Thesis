@@ -54,7 +54,10 @@ export default async function IndicatorsPage() {
           }
           freshness={
             snapshot ? (
-              <FreshnessChip cacheStatus={snapshot.cache_status} />
+              <FreshnessChip
+                cacheStatus={snapshot.cache_status}
+                generatedAt={snapshot.generated_at}
+              />
             ) : undefined
           }
         />

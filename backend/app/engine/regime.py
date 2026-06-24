@@ -354,6 +354,13 @@ def classify_regime(
         top_drivers=_top_drivers(contributions, label),
     )
 
+    # Free/익명: 확신도 원시 수치(종합 점수 score·근거 문구 rationale)는 입문자에 비노출(철학4).
+    # _pro 전용 — evidence 와 같은 tier 경계에서 페이로드에서 제거한다(프론트 가드만으론 페이로드에 남음).
+    # level/probabilistic_label(정성)만 Free 로 남겨 입문자 친화 표현을 보존한다.
+    if tier != Tier.PRO:
+        conclusion.confidence.score = None
+        conclusion.confidence.rationale = None
+
     consensus = _consensus([c for c in contributions if c.raw_value is not None])
     evidence: RegimeEvidence | EvidenceLocked
     if tier == Tier.PRO:

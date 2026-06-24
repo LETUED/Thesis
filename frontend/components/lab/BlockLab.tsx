@@ -7,7 +7,6 @@ import {
   COMPANIES,
   BLOCKS,
   TEMPLATES,
-  getBlock,
   type Company,
   type Tone,
 } from "@/lib/lab/data";

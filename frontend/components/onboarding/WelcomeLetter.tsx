@@ -33,11 +33,14 @@ const STEPS = [
 export interface WelcomeLetterProps {
   // 시작하기 CTA 목적지. 기본은 매크로(지표)부터 보도록 /indicators.
   ctaHref?: string;
+  // CTA 라벨. 익명(가입 동선)일 때는 '무료로 시작' 등으로 분기해 기대-동선을 일치시킨다.
+  ctaLabel?: string;
   className?: string;
 }
 
 export function WelcomeLetter({
   ctaHref = "/indicators",
+  ctaLabel = "시작하기",
   className,
 }: WelcomeLetterProps) {
   // 첫 렌더에서는 숨겨 두고(SSR/하이드레이션 깜빡임 방지), 마운트 후 저장값을 확인한다.
@@ -118,7 +121,7 @@ export function WelcomeLetter({
           onClick={dismiss}
           className="inline-flex items-center justify-center rounded-md bg-foreground px-4 py-2 text-sm font-medium text-on-emphasis transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20"
         >
-          시작하기
+          {ctaLabel}
         </Link>
         <button
           type="button"

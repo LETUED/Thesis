@@ -122,6 +122,20 @@ def compute_trend(closes: list[float], short: int = 5, long: int = 20) -> TrendI
 # ── 단일 티커 수집 ───────────────────────────────────────────────────────────
 
 
+def _sanitize_closes(raw: list[object]) -> list[float]:
+    """종가 시계열 정제: NaN(v==v 실패)·음수·0 을 제거한다.
+
+    시세(주가/지수/환율)는 양수 불변식 — 음수/0 종가는 데이터 소스 오류이므로,
+    오염된 값이 latest/change_pct/trend/regime 결론까지 전파되지 않게 버린다
+    (fundamentals 의 음수 PER 차단과 일관). 전부 무효면 호출자가 status='failed' 로 표면화.
+    """
+    return [
+        float(v)
+        for v in raw
+        if isinstance(v, (int, float)) and v == v and v > 0
+    ]
+
+
 def _extract_closes(spec: TickerSpec, period: str, interval: str, timeout_sec: float) -> list[float]:
     """yfinance 종가 시계열 추출. 실패 시 예외를 위로 던진다(호출자가 잡음)."""
     if _yf is None:
@@ -132,7 +146,7 @@ def _extract_closes(spec: TickerSpec, period: str, interval: str, timeout_sec: f
     if hist is None or hist.empty or "Close" not in hist.columns:
         raise ValueError("empty history")
 
-    closes = [float(v) for v in hist["Close"].tolist() if v == v]  # NaN 제거(v==v)
+    closes = _sanitize_closes(hist["Close"].tolist())
     if not closes:
         raise ValueError("no valid closes")
     return closes

@@ -50,7 +50,7 @@ export function isLocked(
 // ── regime 도메인 ─────────────────────────────────────────────────────────
 export interface Confidence {
   level: ConfidenceLevel;
-  score: number; // 0~1
+  score: number | null; // 0~1 — Pro 전용(Free 응답에선 null 마스킹)
   probabilistic_label: string;
   rationale?: string | null;
 }
@@ -138,6 +138,7 @@ export interface AllocationResult {
   confidence: AllocationConfidence;
   disclaimer: string;
   tier: Tier;
+  cache_status: CacheStatus; // 배분이 기반한 시장 데이터 신선도(stale 이면 갱신 지연 고지)
   generated_at: string;
 }
 
