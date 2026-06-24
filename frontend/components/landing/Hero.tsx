@@ -36,7 +36,7 @@ export function Hero({
         </p>
 
         <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link href={isAuthed ? "/dashboard" : "/signup"}>
+          <Link href={isAuthed ? "/dashboard" : "/regime"}>
             <Button size="lg" className="gap-2">
               {isAuthed ? "대시보드로 가기" : "무료로 현재 국면 보기"}
               <ArrowRight className="h-4 w-4" aria-hidden />
