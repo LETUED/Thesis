@@ -21,6 +21,7 @@
 | 01 | [guest-regime-access](01-guest-regime-access.md) | regime-page | 중 | **가치**: 게스트 무가입 국면+자산배분 결론 열람(② 진입장벽 제거·결론무료) | ✅ 그린 |
 | 02 | [guest-korea-indicators](02-guest-korea-indicators.md) | regime-page(+landing) | 중 | **가치**: 게스트 한국 1순위 지표(원달러·코스피·변동성) 상태 맛보기(한국특화 ②·수치비노출) | ✅ 그린 |
 | 03 | [signup-value-props](03-signup-value-props.md) | **signup**/auth | 중 | **가치**: 게스트 열람→가입 동선의 가입 동기 제공(② 진입 마찰↓) | ✅ 그린 |
+| 04 | [regime-engine-tests](04-regime-engine-tests.md) | **backend** | 유지보수 | **정비**: regime 엔진 커버리지 백필(cycle_2가 회피한 영역 — v3-② 정비 예산) | ✅ 그린 |
 
 > **★ v3 드리프트 차단 실증**: regime-page 2연속(01·02) → 03이 regime-page 수렴을 막고 **signup(미접촉)으로 전환**. cycle_2가 신선도 4연속을 못 막은 것을 v3는 surface 게이트로 차단.
 
