@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { ApiError, getRegime, postAllocation } from "@/lib/api";
+import { ApiError, getRegime, getIndicators, postAllocation } from "@/lib/api";
 import { LandingNav } from "@/components/landing/LandingNav";
 import { RegimeSignalCard } from "@/components/RegimeSignalCard";
 import { RegimeSpectrum } from "@/components/dashboard/RegimeSpectrum";
+import { KoreaTriadStrip } from "@/components/glance/KoreaTriadStrip";
 import { AllocationDonut } from "@/components/AllocationDonut";
 import { OverconfidenceBanner } from "@/components/OverconfidenceBanner";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
@@ -13,7 +14,7 @@ import { ErrorState } from "@/components/ErrorState";
 import { StaleNotice } from "@/components/StaleNotice";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { AllocationResult, RegimeResult } from "@/lib/types";
+import type { AllocationResult, MarketSnapshot, RegimeResult } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "지금 시장 국면 — THESIS",
@@ -38,8 +39,9 @@ export default async function RegimePage() {
   const token = session?.access_token;
 
   // 각자 실패는 null 폴백(페이지 유지).
-  const [regimeR, allocationR] = await Promise.allSettled([
+  const [regimeR, snapshotR, allocationR] = await Promise.allSettled([
     getRegime("free", token),
+    getIndicators("free", undefined, token),
     postAllocation(
       {
         risk_tolerance: "moderate",
@@ -59,6 +61,8 @@ export default async function RegimePage() {
         ? regimeR.reason.message
         : "일시적으로 데이터를 제공할 수 없습니다."
       : null;
+  const snapshot: MarketSnapshot | null =
+    snapshotR.status === "fulfilled" ? snapshotR.value : null;
   const allocation: AllocationResult | null =
     allocationR.status === "fulfilled" ? allocationR.value : null;
 
@@ -86,6 +90,16 @@ export default async function RegimePage() {
             <ErrorState message={regimeError ?? undefined} />
           )}
         </section>
+
+        {/* 한국 1순위 지표 상태 맛보기 — 수치 비노출(상태/방향만, free 마스킹). Top-Down: 국면→한국지표→배분 */}
+        {snapshot ? (
+          <section className="space-y-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              한국 1순위 지표
+            </h2>
+            <KoreaTriadStrip snapshot={snapshot} />
+          </section>
+        ) : null}
 
         {/* 참고 자산배분 결론(도넛만 — 조정·근거는 가입 후 /allocation) */}
         {allocation ? (

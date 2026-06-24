@@ -14,7 +14,7 @@ export function FinalCta({ isAuthed }: { isAuthed: boolean }) {
           지금 시장이 어떤 국면인지, 1분이면 충분합니다. 결론은 무료입니다.
         </p>
         <div className="mt-7">
-          <Link href={isAuthed ? "/dashboard" : "/signup"}>
+          <Link href={isAuthed ? "/dashboard" : "/regime"}>
             <Button size="lg" className="gap-2">
               {isAuthed ? "대시보드로 가기" : "무료로 현재 국면 보기"}
               <ArrowRight className="h-4 w-4" aria-hidden />
