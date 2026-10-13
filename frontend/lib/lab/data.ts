@@ -171,7 +171,7 @@ export interface MetricBlock {
 const pct = (v: number) => `${v.toFixed(1)}%`;
 const clamp100 = (v: number) => Math.max(0, Math.min(100, v));
 
-// 임계값은 CLAUDE.md 기준(ROE>15%, 영업이익률>20%, PEG<1). 색만으로 의미전달 금지 → note 병기.
+// 임계값은 기획 문서 기준(ROE>15%, 영업이익률>20%, PEG<1). 색만으로 의미전달 금지 → note 병기.
 export const BLOCKS: MetricBlock[] = [
   {
     id: "roe",

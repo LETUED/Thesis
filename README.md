@@ -6,7 +6,7 @@
 - `frontend/` — Next.js 14 (App Router, TS, Tailwind). 로그인/대시보드/결제.
 - `backend/supabase/migrations/` — DB 스키마(SQL editor 에 적용).
 
-설계 철학·MVP 단계·임계값은 [`CLAUDE.md`](./CLAUDE.md) 참고.
+설계 철학·MVP 단계·임계값은 `docs/`의 기획 문서 참고.
 
 ## 로컬 실행 — 한 번에 켜고/끄기
 
